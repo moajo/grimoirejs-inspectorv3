@@ -6,6 +6,7 @@
         "allowSyntheticDefaultImports": true,
         "experimentalDecorators": true,
         "types": [
+            "chrome"
         ],
         "jsx": "react"
     },
