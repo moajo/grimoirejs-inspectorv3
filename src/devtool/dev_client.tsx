@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ConnectionGateway } from "./common/ConnectionGateway";
+import { ConnectionGateway } from "../common/ConnectionGateway";
 
 ReactDOM.render(
   <div>Hello React Workd!!</div>,

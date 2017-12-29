@@ -1,4 +1,4 @@
-import { ConnectionGateway } from "./common/ConnectionGateway";
+import { ConnectionGateway } from "../common/ConnectionGateway";
 
 
 // console.log("this aaaa")
@@ -13,5 +13,14 @@ chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
     gateway.addListener(function (m) {
         console.log(m)
         gateway.postMessage("replyhello?")
+
+        const gr = (window as any).GrimoireJS
+
+        if(gr){
+            gateway.postMessage("grimoire is found!")
+
+        }else{
+            gateway.postMessage("grimoire is not found");
+        }
     })
 })
