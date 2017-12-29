@@ -7,7 +7,8 @@ module.exports = {
     dev_client: './devtool/dev_client.tsx',
     devtool:"./devtool/devtool.ts",
     background:"./background/background.ts",
-    content_script:"./content_script/content_script.ts"
+    content_script:"./content_script/content_script.ts",
+    emb:"./emb/emb_main.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
