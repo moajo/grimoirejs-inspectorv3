@@ -4,10 +4,10 @@
     "short_name": "TODO",
     "version": "0.0.0",
     "minimum_chrome_version": "10.0",
-    "devtools_page": "devtool.html",
+    "devtools_page": "html/devtool_init.html",
     "background": {
         "scripts": [
-            "background.js"
+            "dist/background.js"
         ],
         "persistent": false
     },

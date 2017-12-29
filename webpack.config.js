@@ -4,7 +4,9 @@ const path = require('path');
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    dev: './dev.tsx'
+    dev: './dev_client.tsx',
+    devtool:"./devtool.js",
+    background:"./background.js"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
