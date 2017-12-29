@@ -1,3 +1,5 @@
+import { ConnectionGateway } from "./common/ConnectionGateway";
+
 
 chrome.devtools.panels.create("My Panel",
     "../resource/small-logo.png",
@@ -15,21 +17,21 @@ chrome.devtools.panels.create("My Panel",
 //     }
 // );
 
-chrome.tabs.executeScript(chrome.devtools.inspectedWindow.tabId, {
-    file: "./dist/content_script.js"
-}, () => {
-    var backgroundPageConnection = chrome.runtime.connect({
-        name: `devtool:${chrome.devtools.inspectedWindow.tabId}`
-    });
+// chrome.tabs.executeScript(chrome.devtools.inspectedWindow.tabId, {
+//     file: "./dist/content_script.js"
+// }, () => {
+//     const gateway = new ConnectionGateWay("devtool", chrome.runtime.connect({
+//         name: `devtool:${chrome.devtools.inspectedWindow.tabId}`
+//     }))
 
-    backgroundPageConnection.onMessage.addListener(function (message) {
-        console.log("recieve")
-    });
+//     gateway.addListener(function (message) {
+//         console.log("recieve", message)
+//     });
 
-
-    backgroundPageConnection.postMessage({
-        tabId: chrome.devtools.inspectedWindow.tabId
-    });
-});
+//     console.log("@@@@@@@@@")
+//     gateway.postMessage({
+//         tabId: chrome.devtools.inspectedWindow.tabId
+//     });
+// });
 
 

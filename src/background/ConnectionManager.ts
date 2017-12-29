@@ -11,7 +11,16 @@ type PortTuple = {
 export default class ConnectionManager {
     private _establishedPorts: { [portName: string]: PortTuple } = {};
 
-    public connect(port: chrome.runtime.Port) {// connect from devtool
+    public startWaitingConnection(){
+        chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
+            this._connect(port);
+            port.onDisconnect.addListener(()=>{
+                this._disconnect(port);
+            });
+        })
+    }
+
+    private _connect(port: chrome.runtime.Port) {// connect from devtool
         const tabId = Number(port.name.split(":")[1]);//TODO safety assertion
         if (Number.isNaN(tabId)) {
             return;
@@ -21,10 +30,10 @@ export default class ConnectionManager {
         let contentScriptPort = chrome.tabs.connect(tabId, {
             name: `content:${tabId}`
         });
-        port.onMessage.addListener((message, port) => {
+        port.onMessage.addListener((message) => {
             contentScriptPort.postMessage(message);
         });
-        contentScriptPort.onMessage.addListener((message, port) => {
+        contentScriptPort.onMessage.addListener((message) => {
             port.postMessage(message);
         })
         this._establishedPorts[port.name] = {
@@ -33,7 +42,7 @@ export default class ConnectionManager {
         }
     }
 
-    public disconnect(port: chrome.runtime.Port) {//TODO: port.onMessage.removeListener() is needed ?
+    private _disconnect(port: chrome.runtime.Port) {//TODO: port.onMessage.removeListener() is needed ?
         if (!this._establishedPorts[port.name]) {
             return
         }

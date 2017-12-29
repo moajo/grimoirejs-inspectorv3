@@ -1,14 +1,17 @@
+import { ConnectionGateway } from "./common/ConnectionGateway";
+
 
 // console.log("this aaaa")
 // window.addEventListener("message", (e: any) => { // TODO インスペクタ閉じたらremove
 //     console.log(e);
 // });
 
-var _port;
+
 chrome.runtime.onConnect.addListener((port: chrome.runtime.Port) => {
-    _port = port;
-    port.onMessage.addListener(function(m){
-        //do domething
+    console.debug("dev: connection established!")
+    const gateway = new ConnectionGateway("content_script", port);
+    gateway.addListener(function (m) {
         console.log(m)
+        gateway.postMessage("replyhello?")
     })
 })
