@@ -1,19 +1,27 @@
 import { WindowGateway } from "../common/Gateway";
-import {CHANNEL_CONNECTION_ESTABLISHED, STANDBY_ID_CONTENT_SCRIPT_FOR_PAGE } from "../common/constants";
+import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB } from "../common/constants";
 
+async function main() {
+    console.log("emb complite")
 
-console.log("emb complite")
+    // window.postMessage({
+    //     a: `${(window as any).gr}`,
+    //     name: "@@@"
+    // }, "*");
 
-// window.postMessage({
-//     a: `${(window as any).gr}`,
-//     name: "@@@"
-// }, "*");
+    const gateway = new WindowGateway("page:cs");
 
-const gateway = new WindowGateway("page:cs");
+    const connection = gateway.connect(CONNECTION_CS_TO_EMB);
 
-const connection = gateway.connect(STANDBY_ID_CONTENT_SCRIPT_FOR_PAGE);
+    const establishWaiter = connection.open(CHANNEL_CONNECTION_ESTABLISHED).first().toPromise();
 
-connection.getChannel("hoge2").subscribe(a=>{
-    console.log("##########",a)
-})
-connection.post(CHANNEL_CONNECTION_ESTABLISHED, "ping from emb");
+    connection.open("hoge2").subscribe(a => {
+        console.log("##########", a)
+    })
+    connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
+
+    await establishWaiter;
+    connection.post("hoge", "@@aa")
+}
+
+main();
