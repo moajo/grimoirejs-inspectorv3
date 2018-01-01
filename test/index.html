@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>inspector-v2</title>
-    <link rel="stylesheet" href="/index.css" type="text/css">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <script src="node_modules/grimoirejs/register/grimoire.js" charset="utf-8"></script>
-    <script src="node_modules/grimoirejs-math/register/grimoire-math.js" charset="utf-8"></script>
-    <script src="node_modules/grimoirejs-fundamental/register/grimoire-fundamental.js" charset="utf-8"></script>
-    <script src="node_modules/grimoirejs-animation/register/grimoire-animation.js" charset="utf-8"></script>    
-  </head>
-  <body>
-    <div class="devtool-container">
-      <div id="devtool"> </div>
-    </div>
-    <script src="/dist/devtool.browser.js"></script>
-    <script type="text/sort" typeName="testMat">
+
+<head>
+  <meta charset="utf-8">
+  <title>inspector-v2</title>
+  <!-- <link rel="stylesheet" href="/index.css" type="text/css"> -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
+  <script src="node_modules/grimoirejs/register/grimoire.js" charset="utf-8"></script>
+  <script src="node_modules/grimoirejs-math/register/grimoire-math.js" charset="utf-8"></script>
+  <script src="node_modules/grimoirejs-fundamental/register/grimoire-fundamental.js" charset="utf-8"></script>
+  <script src="node_modules/grimoirejs-animation/register/grimoire-animation.js" charset="utf-8"></script>
+</head>
+
+<body>
+  <div class="devtool-container">
+    <div id="content"> </div>
+  </div>
+  <script src="background_test.js"></script>
+  <script src="devtool_test.js"></script>
+  <script type="text/sort" typeName="testMat">
     @Pass{
        FS_PREC(mediump,float)
        @import "basic-vert"
@@ -32,7 +36,7 @@
        #endif
     }
     </script>
-    <script type="text/goml">
+  <script type="text/goml">
         <goml width="512" height ="512">
           <scene>
             <camera class="test test2">
@@ -45,5 +49,6 @@
           </scene>
        </goml>
     </script>
-  </body>
+</body>
+
 </html>

@@ -7,7 +7,7 @@ export async function connectAndWaitEstablished<T extends IConnection>(gateway: 
     const connection = await gateway.standbyConnection(connectionName, cn => {
         cn.open(CHANNEL_CONNECTION_ESTABLISHED).subscribe(established);
     });
-    await established;
+    await established.first().toPromise();
     return connection;
 }
 

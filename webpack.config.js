@@ -4,11 +4,14 @@ const path = require('path');
 module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
-    dev_client: './devtool/dev_client.tsx',
-    devtool: "./devtool/devtool.ts",
-    background: "./background/background.ts",
-    content_script: "./content_script/content_script.ts",
-    emb: "./emb/emb_main.ts"
+    dev_client: './devtool/index.ts',
+    devtool_test: './devtool/index.test.ts',
+    devtool: "./devtool/init.ts",
+    background: "./background/index.ts",
+    background_test: "./background/index.test.ts",
+    content_script: "./content_script/index.ts",
+    content_script_test: "./content_script/index.test.ts",
+    emb: "./emb/index.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -36,7 +39,7 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.resolve(__dirname, 'test'),
+    contentBase: [path.resolve(__dirname, 'test'), path.resolve(__dirname, 'dist')],
     historyApiFallback: true,
     noInfo: true,
   }

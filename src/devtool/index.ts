@@ -1,17 +1,13 @@
+import { createView } from "./View";
+import { connectToBackground } from "./Communicator";
+import { CONTENT_SCRIPT_PATH } from "../common/constants";
+import { PortGateway } from "../common/Gateway";
 
-chrome.devtools.panels.create("My Panel",
-    "../resource/small-logo.png",
-    "../html/devtool_index.html",
-    function (panel) {
-        // code invoked on panel creation
-        // DevTools page -- devtools.js
-        // Create a connection to the background page
-    }
-);
-// chrome.devtools.inspectedWindow.eval(
-//     "console.log(234234)",
-//     function (result, isException) {
-//         console.log("evalresult:", result)
-//     }
-// );
+(async () => {
+    createView();
+    // await injectContentScript(CONTENT_SCRIPT_PATH);
+    const gateway = new PortGateway("dev");
+    await connectToBackground(gateway, chrome.devtools.inspectedWindow.tabId)
+})()
+
 
