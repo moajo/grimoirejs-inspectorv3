@@ -1,9 +1,8 @@
 
 export type ChannelType = "state" | "event";
 
-export interface IChannel<T> {
+export interface IChannelType<T> {
     // channelType: ChannelType
 }
 
-export type IChannelId<T> = IChannel<T> & string
-
+export type IChannelId<T> = IChannelType<T> & string

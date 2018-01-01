@@ -14,8 +14,9 @@ export const CONNECTION_BG_TO_DEV = {
 
 
 export const CHANNEL_CONNECTION_ESTABLISHED: IChannelId<string> = "connection_established";
-// export const CHANNEL_CONNECTION_ESTABLISHED: IChannelId<string> = Object.assign({ channelType: "state" as ChannelType }, "connection_established");
-export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<String>;
+export const CHANNEL_NOTIFY_GR_EXISTS: IChannelId<boolean> = "gr_exisxts";
+export const CHANNEL_NOTIFY_GR_LIBS: IChannelId<string[]> = "gr_libs";
+export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
 
 export const EMBEDDING_SCRIPT_NAME = "emb.js";
 export const EMBEDDING_SCRIPT_PATH = "dist/" + EMBEDDING_SCRIPT_NAME;
