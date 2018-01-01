@@ -8,10 +8,3 @@ chrome.devtools.panels.create("My Panel",
         // Create a connection to the background page
     }
 );
-// chrome.devtools.inspectedWindow.eval(
-//     "console.log(234234)",
-//     function (result, isException) {
-//         console.log("evalresult:", result)
-//     }
-// );
-

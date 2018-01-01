@@ -7,37 +7,9 @@ import { ReplaySubject } from "rxjs/ReplaySubject";
 import { connectAndWaitEstablished } from "../common/Util";
 import { contentScriptMain } from "./ContentScript";
 
-// main();
 console.log("content script is up")
 contentScriptMain(
     new WindowGateway("cs:emb"),
     new WindowGateway("cs:bg"),
     EMBEDDING_SCRIPT_NAME
 )
-
-
-// type cnWQaitPair = {
-//     connection: any,
-//     wait: Promise<any>
-// }
-
-// async function main() {
-
-//     // start waiting page connection
-//     const emb_gateway = new WindowGateway("cs:emb");
-//     const background_gateway = new PortGateway("cs:bg");
-
-//     const embConnectionWaiting = connectAndWaitEstablished(emb_gateway, CONNECTION_CS_TO_EMB);
-//     const bgConnectionWaiting = connectAndWaitEstablished(background_gateway, CONNECTION_CS_TO_BG);
-
-//     //embed script to page
-//     embed(EMBEDDING_SCRIPT_PATH)
-
-//     // waiting connection
-//     const [emb_connection, background_connection] = await Promise.all([embConnectionWaiting, bgConnectionWaiting])
-
-//     console.log("both connection are established!")
-//     redirect(emb_connection, background_connection);
-//     background_connection.post(CHANNEL_CONNECTION_ESTABLISHED, "redirect completed!")
-//     emb_connection.post(CHANNEL_CONNECTION_ESTABLISHED, "redirect completed!")
-// }

@@ -1,4 +1,4 @@
-import { IChannelId, ChannelType } from "./Channel";
+import { IChannelId } from "./Channel";
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "windowgatewayconnectresponse";

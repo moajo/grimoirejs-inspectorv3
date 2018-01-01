@@ -1,4 +1,3 @@
-import ConnectionManager from "../background/ConnectionManager";
 import { PortGateway, IGateway, IConnection, TabGateway, redirect } from "../common/Gateway";
 import { Observable } from "rxjs/Observable";
 import { CONNECTION_BG_TO_DEV, CHANNEL_NOTIFY_PORT_ID, CONNECTION_CS_TO_BG, CHANNEL_CONNECTION_ESTABLISHED, REQUEST_NOTIFY_METAINFO, MetaInfo, CONTENT_SCRIPT_PATH } from "../common/constants";

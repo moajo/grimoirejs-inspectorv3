@@ -21,12 +21,8 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
 
     // waiting connection
     const emb_connection = await embConnectionWaiting;
-    console.log("@@@emb is est")
     const background_connection = await background_gateway.connect(CONNECTION_CS_TO_BG);
 
-    // const [emb_connection, background_connection] = await Promise.all([embConnectionWaiting, bgConnectionWaiting])
-
-    console.log("both connection are established!")
     redirect(emb_connection, background_connection);
     background_connection.post(CHANNEL_CONNECTION_ESTABLISHED, "redirect completed!")
     emb_connection.post(CHANNEL_CONNECTION_ESTABLISHED, "redirect completed!")

@@ -89,7 +89,6 @@ export class WindowGateway implements IGateway<WindowConnection>{
         public id: string
     ) { }
     standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: WindowConnection) => void): Promise<WindowConnection> {
-        console.log(":::connection waiting start", this.id)
         const connectionRegExp = typeof connectionName === "string" ? new RegExp(connectionName) : connectionName;
         return new Promise(resolve => {
             const listener = (e) => {
@@ -101,7 +100,6 @@ export class WindowGateway implements IGateway<WindowConnection>{
                     return;
                 }
                 if (req.type === MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST && connectionRegExp.test(req.connectionName)) {
-                    console.log(":::connection waiting resolve", this.id)
                     window.removeEventListener("message", listener);
                     const cn = new WindowConnection(req.connectionName, this.id, req.gatewayId);
                     if (connectionInit) {
@@ -120,7 +118,6 @@ export class WindowGateway implements IGateway<WindowConnection>{
         })
     }
     async connect(connectionName: string): Promise<WindowConnection> {
-        console.log(";;;connection connectiong start", this.id)
         const connectionWaiter = new Promise<WindowConnection>(resolve => {
             const listener = (e) => {
                 if (e.source != window) {
@@ -135,12 +132,9 @@ export class WindowGateway implements IGateway<WindowConnection>{
                     req.connectionName === connectionName &&
                     req.replyTo === this.id
                 ) {
-                    console.log(";;;connection connectiong resolve", this.id)
                     window.removeEventListener("message", listener);
                     const cn = new WindowConnection(connectionName, this.id, req.gatewayId);
                     resolve(cn);
-                }else{
-                    console.log("-----",req)
                 }
             }
             window.addEventListener("message", listener);
@@ -205,18 +199,18 @@ class WindowConnection implements IConnection {
     ) {
         this._subject = new Subject<ConnectionPacket>();
         window.addEventListener("message", (e) => {
-            if (e.source != window){
+            if (e.source != window) {
                 return;
             }
 
             const packet = e.data as BroadcastPacket;
-            if(
-                !packet.connectionName || 
+            if (
+                !packet.connectionName ||
                 !packet.connectionPacket
-            ){
+            ) {
                 return;
             }
-            if (packet.connectionName!==this.name){
+            if (packet.connectionName !== this.name) {
                 return;
             }
             const c_packet = packet.connectionPacket

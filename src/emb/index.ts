@@ -3,11 +3,6 @@ import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR
 import { notifyLibs } from "./EmbeddedScript";
 
 async function main() {
-    // window.postMessage({
-    //     a: `${(window as any).gr}`,
-    //     name: "@@@"
-    // }, "*");
-
     const gateway = new WindowGateway("page:cs");
 
     const connection = await gateway.connect(CONNECTION_CS_TO_EMB);
@@ -21,7 +16,7 @@ async function main() {
 
     await establishWaiter;
     // connection.post("hoge", "@@aa")
-    connection.post(CHANNEL_NOTIFY_GR_EXISTS,!!(window as any).gr);
+    connection.post(CHANNEL_NOTIFY_GR_EXISTS, !!(window as any).gr);
     notifyLibs(connection);
 }
 

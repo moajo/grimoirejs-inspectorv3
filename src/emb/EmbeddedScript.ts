@@ -6,9 +6,6 @@ export function notifyLibs(connection: IConnection) {
     const libs = []
     for (const key in gr.lib) {
         libs.push(key);
-        // const plugin = gr.lib[key];
-        // log += `  ${i} : ${plugin.__NAME__ || key}@${plugin.__VERSION__}\n`;
-        // i++;
     }
     connection.post(CHANNEL_NOTIFY_GR_LIBS, libs);
 }
