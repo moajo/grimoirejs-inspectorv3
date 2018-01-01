@@ -5,10 +5,10 @@ module.exports = {
   context: path.resolve(__dirname, 'src'),
   entry: {
     dev_client: './devtool/dev_client.tsx',
-    devtool:"./devtool/devtool.ts",
-    background:"./background/background.ts",
-    content_script:"./content_script/content_script.ts",
-    emb:"./emb/emb_main.ts"
+    devtool: "./devtool/devtool.ts",
+    background: "./background/background.ts",
+    content_script: "./content_script/content_script.ts",
+    emb: "./emb/emb_main.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -36,11 +36,8 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: './public/',
-    port: 8080,
-    inline: true,
+    contentBase: path.resolve(__dirname, 'test'),
     historyApiFallback: true,
-    clientLogLevel: "info",
-    stats: { colors: true }
+    noInfo: true,
   }
 };
