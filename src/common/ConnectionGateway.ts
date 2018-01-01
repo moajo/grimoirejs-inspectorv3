@@ -16,10 +16,11 @@ export class ConnectionGateway {
         this.port.postMessage(gatewayMessage)
     }
     public addListener(callback: (message: any, port: chrome.runtime.Port) => void) {
-        this.port.onMessage.addListener((message: GatewayMessage, port: chrome.runtime.Port) => {
+        const listener = (message: GatewayMessage, port: chrome.runtime.Port) => {
             if (message.senderGatewayId !== this.id) {
                 callback(message.payload, port);
             }
-        })
+        };
+        this.port.onMessage.addListener(listener as any)
     }
 }

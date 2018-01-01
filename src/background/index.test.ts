@@ -13,7 +13,7 @@ connectionConnector(dev_gateway, (connectionName: string, tabId: number) => {
 });
 
 
-function injectContentScript(tabId, path) {
+function injectContentScript(tabId: number, path: string) {
     console.log("@@@ bg injecting cs")
     return new Promise<void>(resolve => {
         const scriptTag = document.createElement("script");

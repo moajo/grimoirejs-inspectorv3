@@ -33,7 +33,7 @@ export interface IGateway<T extends IConnection> {
 export interface IConnection {
     gatewayId: string;
     name: string;
-    post<T>(channel: IChannelId<T>, message: T);
+    post<T>(channel: IChannelId<T>, message: T): void;
     open<T>(channel: IChannelId<T>): Observable<T>;
     listen(): Observable<ConnectionPacket>;
 }
@@ -91,7 +91,7 @@ export class WindowGateway implements IGateway<WindowConnection>{
     standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: WindowConnection) => void): Promise<WindowConnection> {
         const connectionRegExp = typeof connectionName === "string" ? new RegExp(connectionName) : connectionName;
         return new Promise(resolve => {
-            const listener = (e) => {
+            const listener = (e: MessageEvent) => {
                 if (e.source != window) {
                     return;
                 }
@@ -119,7 +119,7 @@ export class WindowGateway implements IGateway<WindowConnection>{
     }
     async connect(connectionName: string): Promise<WindowConnection> {
         const connectionWaiter = new Promise<WindowConnection>(resolve => {
-            const listener = (e) => {
+            const listener = (e: MessageEvent) => {
                 if (e.source != window) {
                     return;
                 }
@@ -165,11 +165,11 @@ class PortConnection implements IConnection {
                 this._subject.next(packet);
             }
         }
-        this.port.onMessage.addListener(onMessageListener);
+        this.port.onMessage.addListener(onMessageListener as any);
 
         const onDisconnectListener = (port: chrome.runtime.Port) => {
             this.port.onDisconnect.removeListener(onDisconnectListener);
-            this.port.onMessage.removeListener(onMessageListener);
+            this.port.onMessage.removeListener(onMessageListener as any);
             this._subject.complete()
         }
         this.port.onDisconnect.addListener(onDisconnectListener)
@@ -248,12 +248,13 @@ export function redirect(connection: IConnection, other: IConnection): ISubscrip
         console.log("<=", packet.channel, packet.payload)
         connection.post(packet.channel, packet.payload);
     })
-    return {
+    const handler = {
         closed: false,
         unsubscribe: () => {
             s1.unsubscribe();
             s2.unsubscribe();
-            this.closed = true;
+            handler.closed = true;
         }
     }
+    return handler;
 }

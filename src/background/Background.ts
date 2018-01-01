@@ -14,7 +14,7 @@ export async function connectionConnector<
     csInjector: (tabId: number, csScriptPath: string) => Promise<void>
     ) {
     for await (const connection of connectionGenerator(gateway, CONNECTION_BG_TO_DEV.regex)) {
-        const tabId = Number(connection.name.match(CONNECTION_BG_TO_DEV.regex)[1]);
+        const tabId = Number(connection.name.match(CONNECTION_BG_TO_DEV.regex)![1]);
         const cs_gateway = csGatewayGenerator("bg:cs", tabId);
         const waiting_cs_connection = connectAndWaitEstablished(cs_gateway, CONNECTION_CS_TO_BG)
         await csInjector(tabId, CONTENT_SCRIPT_PATH)
