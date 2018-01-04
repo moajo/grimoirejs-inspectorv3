@@ -1,6 +1,6 @@
 import { IGateway, IConnection, redirect } from "../common/Gateway";
 import { connectAndWaitEstablished } from "../common/Util";
-import embed from "../emb/Enbedder";
+import embed from "../embbed/Embedder";
 import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CONNECTION_CS_TO_BG } from "../common/constants";
 
 type cnWQaitPair = {

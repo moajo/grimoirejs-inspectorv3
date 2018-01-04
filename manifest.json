@@ -17,6 +17,6 @@
         "https://*/*"
     ],
     "web_accessible_resources": [
-        "dist/emb.js"
-      ]
+        "dist/embbed.js"
+    ]
 }

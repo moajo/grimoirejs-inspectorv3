@@ -1,6 +1,7 @@
 import * as React from "react";
 import ReactDOM from 'react-dom';
-
+import styl from "./Test.styl";
+console.log(styl);
 const options = [
     { value: 'one', label: 'One' },
     { value: 'two', label: 'Two' },

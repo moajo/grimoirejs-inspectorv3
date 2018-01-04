@@ -11,7 +11,7 @@ module.exports = {
     background_test: "./background/index.test.ts",
     content_script: "./content_script/index.ts",
     content_script_test: "./content_script/index.test.ts",
-    emb: "./emb/index.ts"
+    embbed: "./embbed/index.ts"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -19,13 +19,30 @@ module.exports = {
   },
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
-    extensions: ['.ts', '.tsx', '.js']
+    extensions: ['.ts', '.tsx', '.js', '.styl']
   },
   module: {
     rules: [
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-      { test: /\.tsx?$/, loader: 'ts-loader' }
-    ]
+      { test: /\.tsx?$/, loader: 'ts-loader' }, {
+        test: /\.styl$/,
+        use: [
+          {
+            loader: 'style-loader'
+          }, {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              localIdentName: '[path][name]__[local]--[hash:base64:5]'
+            }
+          },
+          {
+            loader: 'stylus-loader'
+          }
+        ]
+      }
+    ],
+
     // rules: [
     //   {
     //     test: /\.js$/,
@@ -40,7 +57,7 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     contentBase: [
-      path.resolve(__dirname, 'test'), 
+      path.resolve(__dirname, 'test'),
       path.resolve(__dirname, 'dist'),
       path.resolve(__dirname, 'resources'),
     ],
