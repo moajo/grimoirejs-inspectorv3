@@ -39,7 +39,11 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: [path.resolve(__dirname, 'test'), path.resolve(__dirname, 'dist')],
+    contentBase: [
+      path.resolve(__dirname, 'test'), 
+      path.resolve(__dirname, 'dist'),
+      path.resolve(__dirname, 'resources'),
+    ],
     historyApiFallback: true,
     noInfo: true,
   }

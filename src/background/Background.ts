@@ -1,7 +1,11 @@
-import { PortGateway, IGateway, IConnection, TabGateway, redirect } from "../common/Gateway";
-import { Observable } from "rxjs/Observable";
-import { CONNECTION_BG_TO_DEV, CHANNEL_NOTIFY_PORT_ID, CONNECTION_CS_TO_BG, CHANNEL_CONNECTION_ESTABLISHED, REQUEST_NOTIFY_METAINFO, MetaInfo, CONTENT_SCRIPT_PATH } from "../common/constants";
-import { connectAndWaitEstablished, waitConnectionEstablished } from "../common/Util";
+import {
+    CHANNEL_CONNECTION_ESTABLISHED,
+    CONNECTION_BG_TO_DEV,
+    CONNECTION_CS_TO_BG,
+    CONTENT_SCRIPT_PATH,
+} from '../common/constants';
+import { IConnection, IGateway, redirect } from '../common/Gateway';
+import { connectAndWaitEstablished } from '../common/Util';
 
 type csGateWayGenerator<T extends IConnection> = (connectionName: string, tabId: number) => IGateway<T>;
 

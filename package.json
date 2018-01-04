@@ -29,6 +29,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
+    "grimoirejs": "beta",
     "postcss-easy-import": "^3.0.0",
     "postcss-loader": "^2.0.9",
     "style-loader": "^0.19.1",
@@ -39,7 +40,14 @@
   },
   "babel": {
     "presets": [
-      "env",
+      [
+        "env",
+        {
+          "targets": {
+            "chrome": 99
+          }
+        }
+      ],
       "react"
     ]
   }

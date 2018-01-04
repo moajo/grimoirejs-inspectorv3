@@ -1,5 +1,5 @@
 import { IGateway, IConnection } from "../common/Gateway";
-import { CONNECTION_BG_TO_DEV, CHANNEL_CONNECTION_ESTABLISHED, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_NOTIFY_GR_LIBS } from "../common/constants";
+import { CONNECTION_BG_TO_DEV, CHANNEL_CONNECTION_ESTABLISHED, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_NOTIFY_GR_LIBS, CHANNEL_NOTIFY_ROOT_NODES } from "../common/constants";
 import { waitConnectionEstablished } from "../common/Util";
 
 export async function connectToBackground<T extends IConnection>(gateway: IGateway<T>, tabId: number) {
@@ -17,7 +17,10 @@ export async function connectToBackground<T extends IConnection>(gateway: IGatew
   });
 
   connection.open(CHANNEL_NOTIFY_GR_LIBS).subscribe(libs=>{
-    console.log("@libs,libs",libs)
+    console.log("@libs",libs)
+  })
+  connection.open(CHANNEL_NOTIFY_ROOT_NODES).subscribe(a=>{
+    console.log("root node change",a)
   })
 
   const establishWaiter = waitConnectionEstablished(connection);

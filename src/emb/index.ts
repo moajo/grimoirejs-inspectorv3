@@ -1,6 +1,6 @@
 import { WindowGateway } from "../common/Gateway";
 import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS } from "../common/constants";
-import { notifyLibs } from "./EmbeddedScript";
+import { notifyLibs, notifyGrExists, notifyRootNodes } from "./EmbeddedScript";
 
 async function main() {
     const gateway = new WindowGateway("page:cs");
@@ -16,8 +16,12 @@ async function main() {
 
     await establishWaiter;
     // connection.post("hoge", "@@aa")
-    connection.post(CHANNEL_NOTIFY_GR_EXISTS, !!(window as any).gr);
-    notifyLibs(connection);
+    const gr = notifyGrExists(connection);
+    if (gr) {
+        notifyLibs(connection, gr);
+        notifyRootNodes(connection, gr);
+    }
+
 }
 
 main();
