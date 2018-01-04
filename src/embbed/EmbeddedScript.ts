@@ -29,7 +29,7 @@ export function notifyRootNodes(connection: IConnection, gr: GrimoireInterface) 
     gr.on(EVENT_ROOT_NODE_DID_ADDED, a => {
         const rootNode = a.rootNode;
         const ownerScriptTag = a.ownerScriptTag;
-        connection.post(CHANNEL_NOTIFY_ROOT_NODES, a);
+        //connection.post(CHANNEL_NOTIFY_ROOT_NODES, a);
     })
 
 }
