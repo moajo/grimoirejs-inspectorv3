@@ -1,7 +1,21 @@
+import { FrameInfo } from "../../../common/schema";
+
+export interface TreeSelection {
+    frameId: string;
+    rootNodeId: string;
+}
+
+export interface NodeSelection {
+    treeSelection: TreeSelection;
+    nodeId: string;
+}
+
 export interface ICommonState {
-    test: boolean;
+    frames: FrameInfo[];
+    treeSelection?: TreeSelection;
+    nodeSelection?: NodeSelection;
 }
 
 export const DefaultCommonState: ICommonState = {
-    test: false
+    frames: [],
 };

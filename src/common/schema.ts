@@ -1,3 +1,20 @@
+export interface FrameInfo {
+    frameId: string;
+    frameURL: string;
+    rootNodes: { [key: string]: RootNodeInfo }
+}
+
+export interface ScriptTagInfo {
+    scriptTagId?: string;
+    scriptTagClass?: string;
+    scriptTagSrc?: string;
+}
+
+export interface RootNodeInfo {
+    scriptTag?: ScriptTagInfo;
+    rootNodeId: string;
+}
+
 export interface NodeStructureInfo {
     uniqueId: string;
     fqn: string;
