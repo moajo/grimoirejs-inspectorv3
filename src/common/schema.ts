@@ -2,6 +2,7 @@ import GomlNode from "grimoirejs/ref/Core/GomlNode";
 import ComponentDeclaration from "grimoirejs/ref/Core/ComponentDeclaration";
 import Component from "grimoirejs/ref/Core/Component";
 import Attribute from "grimoirejs/ref/Core/Attribute";
+import * as _ from "lodash";
 
 export interface FrameInfo {
     frameId: string;
@@ -12,7 +13,7 @@ export interface FrameInfo {
 
 export interface ScriptTagInfo {
     scriptTagId?: string;
-    scriptTagClass?: string;
+    scriptTagClass?: string[];
     scriptTagSrc?: string;
 }
 
@@ -51,7 +52,7 @@ export interface AttributeInfo {
 
 export function convertToScriptTagInfo(tag: Element): ScriptTagInfo {
     const id = tag.getAttribute("id");
-    const className = tag.getAttribute("class");
+    const className = _.toArray(tag.classList);
     const src = tag.getAttribute("src");
     return {
         scriptTagId: id ? id : undefined,
