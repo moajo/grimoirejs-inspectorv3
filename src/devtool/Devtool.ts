@@ -8,20 +8,10 @@ export async function connectToBackground<T extends IConnection>(gateway: IGatew
   // connection.open("hoge").subscribe((a: any) => {
   //   connection.post("hoge2", a + a)
   // })
-  connection.open(CHANNEL_NOTIFY_GR_EXISTS).shareReplay(1).subscribe(exist=>{
-    if(exist){
-      console.log("@@@yes")
-    }else{
-      console.log("@@@no")
-    }
-  });
+  connection.open(CHANNEL_NOTIFY_GR_EXISTS).shareReplay(1);
 
-  connection.open(CHANNEL_NOTIFY_GR_LIBS).subscribe(libs=>{
-    console.log("@libs",libs)
-  })
-  connection.open(CHANNEL_NOTIFY_ROOT_NODES).subscribe(a=>{
-    console.log("root node change",a)
-  })
+  connection.open(CHANNEL_NOTIFY_GR_LIBS).subscribe();
+  connection.open(CHANNEL_NOTIFY_ROOT_NODES).subscribe();
 
   const establishWaiter = waitConnectionEstablished(connection);
   connection.post(CHANNEL_CONNECTION_ESTABLISHED, "dev is ready!");
