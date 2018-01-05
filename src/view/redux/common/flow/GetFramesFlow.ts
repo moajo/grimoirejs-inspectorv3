@@ -1,0 +1,32 @@
+import { ActionsObservable } from "redux-observable";
+import CommonAction, { ConnectionEstablishedAction } from "../CommonAction";
+import CommonActionType from "../CommonActionType";
+import { MiddlewareAPI } from "redux";
+import { IState } from "../../State";
+import { Observable } from "rxjs/Observable";
+import { FrameInfo } from "../../../../common/schema";
+import { CHANNEL_GET_FRAMES } from "../../../../common/constants";
+import { PutFrameActionCreator } from "../CommonActionCreator";
+import { ICommonState } from "../CommonState";
+
+
+
+export function GetFramesEpic(action: ActionsObservable<CommonAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
+    return action.ofType(CommonActionType.GET_FRAMES)
+        .map(async (action) => {
+            const p = new Promise<FrameInfo>(resolve => {
+                store.getState().common.connection!.open(CHANNEL_GET_FRAMES).subscribe(a => {
+                    resolve(a)
+                })
+            });
+
+            store.getState().common.connection!.post(CHANNEL_GET_FRAMES, null);
+            return p;
+        }).flatMap(a => Observable.fromPromise(a))
+        .map(a => PutFrameActionCreator(a.frameId, a)) as any;
+}
+
+export const storeSection = "common";
+
+export const epics = [GetFramesEpic];
+

@@ -8,7 +8,7 @@ import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
 import { ContextNotFound } from './components/ContextNotFound';
-import { GetFramesActionCreator } from './redux/common/flow/InitFlow';
+import { ConnectToServerActionCreator } from './redux/common/CommonActionCreator';
 
 
 export function createView() {
@@ -21,7 +21,7 @@ export function createView() {
     ,
     document.getElementById('gr-inspector')
     , () => {
-      Store.dispatch(GetFramesActionCreator());
+      Store.dispatch(ConnectToServerActionCreator());
     }
   );
 }

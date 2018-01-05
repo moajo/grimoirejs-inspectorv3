@@ -2,10 +2,12 @@ import { createStore, applyMiddleware, Reducer, Action, combineReducers, Store }
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createEpicMiddleware, combineEpics } from "redux-observable";
 import { IReduxSection } from "./IReduxSection";
-import * as InitFlow from "./common/flow/InitFlow";
+import * as ConnectFlow from "./common/flow/ConnectFlow";
+import * as GetFramesFlow from "./common/flow/GetFramesFlow";
+import * as MainFlow from "./common/flow/MainFlow";
 import { IState } from "./State";
 
-const sections: IReduxSection[] = [InitFlow];
+const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow];
 
 function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSection> {
     const sectionArray: { [key: string]: Reducer<IState>[] } = {};
