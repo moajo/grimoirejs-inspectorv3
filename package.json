@@ -39,7 +39,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^3.0.2",
-    "grimoirejs": "^1.0.8-beta",
+    "grimoirejs": "^1.0.9-beta2",
     "postcss-easy-import": "^3.0.0",
     "postcss-loader": "^2.0.9",
     "style-loader": "^0.19.1",

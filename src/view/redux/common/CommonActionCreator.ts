@@ -1,4 +1,4 @@
-import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction, SelectTreeAction } from "./CommonAction";
+import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction, SelectTreeAction, NotifyAttributeChangeAction } from "./CommonAction";
 import CommonActionType from "./CommonActionType";
 import { IConnection } from "../../../common/Gateway";
 import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
@@ -45,5 +45,16 @@ export function NotifyTreeStructureActionCreator(nodeStructureInfo: NodeStructur
         type: CommonActionType.NOTIFY_TREE_STRUCTURE,
         structure: nodeStructureInfo,
         selection,
+    }
+}
+
+export function NotifyAttributeChangeActionCreator(nodeID: string, componentID: string, attributeFQN: string, oldValue: any, newValue: any): NotifyAttributeChangeAction {
+    return {
+        type: CommonActionType.NOTIFY_ATTRIBUTE_CHANGE,
+        nodeID,
+        componentID,
+        attributeFQN,
+        oldValue,
+        newValue,
     }
 }

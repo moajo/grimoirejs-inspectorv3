@@ -1,5 +1,5 @@
 import { WindowGateway } from "../common/Gateway";
-import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_GET_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../common/constants";
+import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_PUT_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE, CHANNEL_SELECT_NODE } from "../common/constants";
 import { notifyLibs, notifyGrExists, notifyRootNodes } from "./EmbeddedScript";
 import { GrimoireInterface } from "grimoirejs/ref/Tool/Types";
 import { DEFAULT_NAMESPACE } from "grimoirejs/ref/Core/Constants";
@@ -34,13 +34,17 @@ async function main() {
 
 
 
-    connection.open(CHANNEL_GET_FRAMES).subscribe(a => {
-        connection.post(CHANNEL_GET_FRAMES, frame)
+    connection.open(CHANNEL_PUT_FRAMES).subscribe(a => {
+        connection.post(CHANNEL_PUT_FRAMES, frame)
     });
     connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
         const rootNode = gr.rootNodes[req.rootNodeId];
         const nodeStructure = convertToNodeStructureInfo(rootNode);
         connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
+    })
+
+    connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector=>{
+        nodeSelector.frameID
     })
 
     connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");

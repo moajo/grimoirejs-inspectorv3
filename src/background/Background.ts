@@ -23,7 +23,7 @@ export async function connectionConnector<
         const waiting_cs_connection = connectAndWaitEstablished(cs_gateway, CONNECTION_CS_TO_BG)
         await csInjector(tabId, CONTENT_SCRIPT_PATH)
         const cs_connection = await waiting_cs_connection;
-        redirect(connection, cs_connection)
+        redirect(connection, cs_connection, true);
         cs_connection.post(CHANNEL_CONNECTION_ESTABLISHED, "bg: ok?");
         connection.post(CHANNEL_CONNECTION_ESTABLISHED, "bg: ok");
     }

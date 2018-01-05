@@ -238,13 +238,17 @@ class WindowConnection implements IConnection {
     }
 }
 
-export function redirect(connection: IConnection, other: IConnection): ISubscription {
+export function redirect(connection: IConnection, other: IConnection, debug = false): ISubscription {
     const s1 = connection.listen().subscribe(packet => {
-        console.log("=>", packet.channel, packet.payload)
+        if (debug) {
+            console.log("=>", packet.channel, packet.payload)
+        }
         other.post(packet.channel, packet.payload);
     });
     const s2 = other.listen().subscribe(packet => {
-        console.log("<=", packet.channel, packet.payload)
+        if (debug) {
+            console.log("<=", packet.channel, packet.payload)
+        }
         connection.post(packet.channel, packet.payload);
     })
     const handler = {

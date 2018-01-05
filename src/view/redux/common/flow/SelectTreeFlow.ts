@@ -5,7 +5,7 @@ import { MiddlewareAPI } from "redux";
 import { IState } from "../../State";
 import { Observable } from "rxjs/Observable";
 import { FrameInfo, NodeStructureInfo } from "../../../../common/schema";
-import { CHANNEL_GET_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../../../../common/constants";
+import { CHANNEL_PUT_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../../../../common/constants";
 import { PutFrameActionCreator, NotifyTreeStructureActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
 
