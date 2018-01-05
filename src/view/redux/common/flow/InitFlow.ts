@@ -9,6 +9,7 @@ import CommonActionType from "../CommonActionType";
 import Store from "../../Store";
 import { CHANNEL_GET_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../common/constants";
 import { PutFrameActionCreator } from "../CommonActionCreator";
+import { FrameInfo } from "../../../../common/schema";
 
 export interface ConnectionEstablishedAction extends Action {
     type: CommonActionType.CONNECTION_ESTABLISHED,
@@ -51,16 +52,16 @@ export function GetFramesEpic(action: Observable<CommonAction>, state: IState): 
 export function GetFramesEpic2(action: Observable<ConnectionEstablishedAction>, state: IState): Observable<CommonAction> {
     return action.filter(action => action.type === CommonActionType.CONNECTION_ESTABLISHED)
         .map(async (action: ConnectionEstablishedAction) => {
-            const p = new Promise(resolve => {
+            const p = new Promise<FrameInfo>(resolve => {
                 action.connection.open(CHANNEL_GET_FRAMES).subscribe(a => {
                     resolve(a)
                 })
             });
 
-            action.connection.post(CHANNEL_GET_FRAMES, "aaaaa");
+            action.connection.post(CHANNEL_GET_FRAMES, null);
             return p;
         }).flatMap(a => Observable.fromPromise(a)).do((a) => {
-            Store.dispatch(PutFrameActionCreator(a as string));
+            Store.dispatch(PutFrameActionCreator(a.frameId, a));
         }) as any;
 }
 
