@@ -1,7 +1,7 @@
 export interface FrameInfo {
     frameId: string;
     frameURL: string;
-    rootNodes: { [key: string]: RootNodeInfo }
+    trees: { [key: string]: TreeInfo }
 }
 
 export interface ScriptTagInfo {
@@ -10,7 +10,7 @@ export interface ScriptTagInfo {
     scriptTagSrc?: string;
 }
 
-export interface RootNodeInfo {
+export interface TreeInfo {
     scriptTag?: ScriptTagInfo;
     rootNodeId: string;
 }

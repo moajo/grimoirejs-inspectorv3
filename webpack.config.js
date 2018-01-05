@@ -40,7 +40,8 @@ module.exports = {
             loader: 'stylus-loader'
           }
         ]
-      }
+      },
+      { test: /\.(jpg|png)/, loader: 'url-loader' }
     ],
 
     // rules: [

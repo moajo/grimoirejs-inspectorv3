@@ -8,19 +8,19 @@ import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
 import Epic from './redux/Epic';
+import { ContextNotFound } from './components/ContextNotFound';
 
 
 export function createView() {
   ReactDOM.render(
     <Provider store={Store}>
       <div>
-        <Header />
-        <div>Hello React Workd!!</div>
+        <ContextNotFound />
       </div>
     </Provider>
     ,
-    document.getElementById('content')
-    ,()=>{
+    document.getElementById('gr-inspector')
+    , () => {
       Epic
       console.log("aaaaaaaaaaa@@@@@@@@@@@@@@@@@@@")
     }
