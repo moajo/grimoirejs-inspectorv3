@@ -83,21 +83,13 @@ export function convertToComponentInfo(component: Component): ComponentInfo {
 }
 
 
-export function convertToAttributeInfo(attribute:Attribute):AttributeInfo{
-    // return {
-    //     fqn: attribute.name.fqn,
-    //     converterFQN: attribute.converter.name,
-    //     obtainedValue: any,
-    //     defaultValue: any,
-    //     errorText: string,
-    //     isLazy: boolean,
-    // } // return {
-    //     fqn: attribute.name.fqn,
-    //     converterFQN: attribute.converter.name,
-    //     obtainedValue: any,
-    //     defaultValue: any,
-    //     errorText: string,
-    //     isLazy: boolean,
-    // }
-    return {} as any;
+export function convertToAttributeInfo(attribute: Attribute): AttributeInfo {
+    return {
+        fqn: attribute.name.fqn,
+        converterFQN: "notimplement!" as any,
+        obtainedValue: "notimplement!" as any,
+        defaultValue: "notimplement!" as any,
+        errorText: "notimplement!" as any,
+        isLazy: "notimplement!" as any,
+    }
 }

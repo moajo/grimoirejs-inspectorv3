@@ -1,17 +1,9 @@
-import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction } from "./CommonAction";
+import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction, SelectTreeAction } from "./CommonAction";
 import CommonActionType from "./CommonActionType";
 import { IConnection } from "../../../common/Gateway";
 import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
 import { CHANNEL_NOTIFY_GR_EXISTS } from "../../../common/constants";
-
-
-export function PutFrameActionCreator(frameId: string, frameInfo?: FrameInfo): PutFrameAction {
-    return {
-        type: CommonActionType.PUT_FRAME,
-        frameId,
-        frameInfo,
-    }
-}
+import { TreeSelection } from "./CommonState";
 
 export function ConnectToServerActionCreator(): ConnectToServerAction {
     return {
@@ -33,6 +25,20 @@ export function GetFramesActionCreator(): GetFramesAction {
     }
 }
 
+export function PutFrameActionCreator(frameId: string, frameInfo?: FrameInfo): PutFrameAction {
+    return {
+        type: CommonActionType.PUT_FRAME,
+        frameId,
+        frameInfo,
+    }
+}
+
+export function SelectTreeActionCreator(selection: TreeSelection): SelectTreeAction {
+    return {
+        type: CommonActionType.SELECT_TREE,
+        selection,
+    }
+}
 
 export function NotifyTreeStructureActionCreator(nodeStructureInfo: NodeStructureInfo): NotifyTreeStructureAction {
     return {

@@ -1,10 +1,10 @@
 import { WindowGateway } from "../common/Gateway";
-import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_GET_FRAMES, CHANNEL_SELECT_TREE } from "../common/constants";
+import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_GET_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../common/constants";
 import { notifyLibs, notifyGrExists, notifyRootNodes } from "./EmbeddedScript";
 import { GrimoireInterface } from "grimoirejs/ref/Tool/Types";
 import { DEFAULT_NAMESPACE } from "grimoirejs/ref/Core/Constants";
 import Namespace from "grimoirejs/ref/Core/Namespace";
-import { convertToScriptTagInfo, FrameInfo } from "../common/schema";
+import { convertToScriptTagInfo, FrameInfo, convertToNodeStructureInfo } from "../common/schema";
 
 async function main() {
     const gateway = new WindowGateway("page:cs");
@@ -30,7 +30,7 @@ async function main() {
             rootNodeId: rootNode.id,
         }
     }
-    const frames:{[key:string]:FrameInfo} = {"main":frame}
+    const frames: { [key: string]: FrameInfo } = { "main": frame }
 
 
 
@@ -39,7 +39,8 @@ async function main() {
     });
     connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
         const rootNode = gr.rootNodes[req.rootNodeId];
-        
+        const nodeStructure = convertToNodeStructureInfo(rootNode);
+        connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
     })
 
     connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
