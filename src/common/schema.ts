@@ -1,3 +1,8 @@
+import GomlNode from "grimoirejs/ref/Core/GomlNode";
+import ComponentDeclaration from "grimoirejs/ref/Core/ComponentDeclaration";
+import Component from "grimoirejs/ref/Core/Component";
+import Attribute from "grimoirejs/ref/Core/Attribute";
+
 export interface FrameInfo {
     frameId: string;
     frameURL: string;
@@ -53,4 +58,45 @@ export function convertToScriptTagInfo(tag: Element): ScriptTagInfo {
         scriptTagClass: className ? className : undefined,
         scriptTagSrc: src ? src : undefined
     }
+}
+
+export function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
+    return {
+        uniqueId: node.id,
+        fqn: node.name.fqn,
+        children: node.children.map(convertToNodeStructureInfo),
+        components: node.getComponents<Component>().map(convertToComponentInfo),
+    }
+
+}
+
+export function convertToComponentInfo(component: Component): ComponentInfo {
+    return {
+        uniqueId: component.id,
+        fqn: component.name.fqn,
+        attributes: component.attributes.toArray().reduce((obj, attr) => {
+            obj[attr.name.fqn] = convertToAttributeInfo(attr);
+            return obj;
+        }, {} as { [attributeFQN: string]: AttributeInfo }),
+    }
+}
+
+
+export function convertToAttributeInfo(attribute:Attribute):AttributeInfo{
+    // return {
+    //     fqn: attribute.name.fqn,
+    //     converterFQN: attribute.converter.name,
+    //     obtainedValue: any,
+    //     defaultValue: any,
+    //     errorText: string,
+    //     isLazy: boolean,
+    // } // return {
+    //     fqn: attribute.name.fqn,
+    //     converterFQN: attribute.converter.name,
+    //     obtainedValue: any,
+    //     defaultValue: any,
+    //     errorText: string,
+    //     isLazy: boolean,
+    // }
+    return {} as any;
 }

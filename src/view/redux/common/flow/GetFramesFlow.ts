@@ -30,3 +30,17 @@ export const storeSection = "common";
 
 export const epics = [GetFramesEpic];
 
+export function reducer(store: ICommonState, action: CommonAction) {
+    switch (action.type) {
+        case CommonActionType.PUT_FRAME:
+            const frames = {} as { [frameId: string]: FrameInfo | undefined };
+            frames[action.frameId] = action.frameInfo;
+            store = {
+                ...store,
+                frames,
+            };
+            break;
+    }
+    return store;
+}
+

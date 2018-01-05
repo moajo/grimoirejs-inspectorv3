@@ -5,9 +5,11 @@ import { IReduxSection } from "./IReduxSection";
 import * as ConnectFlow from "./common/flow/ConnectFlow";
 import * as GetFramesFlow from "./common/flow/GetFramesFlow";
 import * as MainFlow from "./common/flow/MainFlow";
+import * as SelectTreeFlow from "./common/flow/SelectTreeFlow";
 import { IState } from "./State";
+import { reduce } from "rxjs/operators/reduce";
 
-const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow];
+const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow];
 
 function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSection> {
     const sectionArray: { [key: string]: Reducer<IState>[] } = {};
@@ -28,7 +30,8 @@ function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSecti
     for (let key in sectionArray) {
         let reducer = sectionArray[key][0];
         for (let i = 1; i < sectionArray[key].length; i++) {
-            reducer = (store: any, action: Action) => sectionArray[key][i](reducer(store, action), action);
+            let a = reducer
+            reducer = (store: any, action: Action) => sectionArray[key][i](a(store, action), action);
         }
         reducers[key] = reducer;
     }

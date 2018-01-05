@@ -1,5 +1,6 @@
 import { IChannelId } from "./Channel";
-import { FrameInfo } from "./schema";
+import { FrameInfo, NodeStructureInfo } from "./schema";
+import { TreeSelection } from "../view/redux/common/CommonState";
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "windowgatewayconnectresponse";
@@ -20,6 +21,9 @@ export const CHANNEL_NOTIFY_GR_LIBS: IChannelId<string[]> = "gr_libs";
 export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "channel_notify_root_node";
 export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
 export const CHANNEL_GET_FRAMES = "get_frames" as IChannelId<FrameInfo>;
+
+export const CHANNEL_SELECT_TREE = "CHANNEL_SELECT_TREE" as IChannelId<TreeSelection>;
+export const CHANNEL_NOTIFY_TREE_STRUCTURE = "CHANNEL_NOTIFY_TREE_STRUCTURE" as IChannelId<NodeStructureInfo>;
 
 
 export const EMBEDDING_SCRIPT_NAME = "embbed.js";

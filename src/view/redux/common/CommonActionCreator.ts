@@ -1,7 +1,8 @@
-import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction } from "./CommonAction";
+import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction } from "./CommonAction";
 import CommonActionType from "./CommonActionType";
 import { IConnection } from "../../../common/Gateway";
-import { FrameInfo } from "../../../common/schema";
+import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
+import { CHANNEL_NOTIFY_GR_EXISTS } from "../../../common/constants";
 
 
 export function PutFrameActionCreator(frameId: string, frameInfo?: FrameInfo): PutFrameAction {
@@ -26,8 +27,16 @@ export function ConnectionEstablishedActionCreator(connection: IConnection): Con
 }
 
 
-export function GetFramesActionCreator():GetFramesAction{
+export function GetFramesActionCreator(): GetFramesAction {
     return {
-        type:CommonActionType.GET_FRAMES
+        type: CommonActionType.GET_FRAMES
+    }
+}
+
+
+export function NotifyTreeStructureActionCreator(nodeStructureInfo: NodeStructureInfo): NotifyTreeStructureAction {
+    return {
+        type: CommonActionType.NOTIFY_TREE_STRUCTURE,
+        structure: nodeStructureInfo,
     }
 }

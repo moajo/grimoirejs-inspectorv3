@@ -1,6 +1,6 @@
 import { Action } from "redux";
 import CommonActionType from "./CommonActionType";
-import { FrameInfo } from "../../../common/schema";
+import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
 import { TreeSelection, NodeSelection } from "./CommonState";
 import { IConnection } from "../../../common/Gateway";
 
@@ -29,6 +29,11 @@ export interface PutFrameAction extends Action {
 export interface SelectTreeAction extends Action {
     type: CommonActionType.SELECT_TREE;
     selection: TreeSelection;
+}
+
+export interface NotifyTreeStructureAction extends Action {
+    type: CommonActionType.NOTIFY_TREE_STRUCTURE;
+    structure: NodeStructureInfo,
 }
 
 export interface SelectNodeAction extends Action {
