@@ -40,9 +40,10 @@ export function SelectTreeActionCreator(selection: TreeSelection): SelectTreeAct
     }
 }
 
-export function NotifyTreeStructureActionCreator(nodeStructureInfo: NodeStructureInfo): NotifyTreeStructureAction {
+export function NotifyTreeStructureActionCreator(nodeStructureInfo: NodeStructureInfo, selection: TreeSelection): NotifyTreeStructureAction {
     return {
         type: CommonActionType.NOTIFY_TREE_STRUCTURE,
         structure: nodeStructureInfo,
+        selection,
     }
 }

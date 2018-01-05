@@ -21,10 +21,22 @@ export function SelectTreeEpic(action: ActionsObservable<SelectTreeAction>, stor
             });
 
             store.getState().common.connection!.post(CHANNEL_SELECT_TREE, action.selection);
-            return NotifyTreeStructureActionCreator(await p);
+            return NotifyTreeStructureActionCreator(await p, action.selection);
         }).flatMap(a => Observable.fromPromise(a)) as any;
 }
 
 export const storeSection = "common";
 
 export const epics = [SelectTreeEpic];
+
+export function reducer(store: ICommonState, action: CommonAction) {
+    switch (action.type) {
+        case CommonActionType.NOTIFY_TREE_STRUCTURE:
+            store = {
+                ...store,
+                treeSelection: action.selection,
+            };
+            break;
+    }
+    return store;
+}

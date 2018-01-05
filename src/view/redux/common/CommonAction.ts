@@ -4,7 +4,13 @@ import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
 import { TreeSelection, NodeSelection } from "./CommonState";
 import { IConnection } from "../../../common/Gateway";
 
-type CommonAction = ConnectToServerAction | ConnectionEstablishedAction | GetFramesAction | PutFrameAction | SelectTreeAction | SelectNodeAction;
+type CommonAction = ConnectToServerAction |
+    ConnectionEstablishedAction |
+    GetFramesAction |
+    PutFrameAction |
+    SelectTreeAction |
+    SelectNodeAction |
+    NotifyTreeStructureAction;
 export default CommonAction;
 
 export interface ConnectToServerAction extends Action {
@@ -33,7 +39,8 @@ export interface SelectTreeAction extends Action {
 
 export interface NotifyTreeStructureAction extends Action {
     type: CommonActionType.NOTIFY_TREE_STRUCTURE;
-    structure: NodeStructureInfo,
+    selection: TreeSelection;
+    structure: NodeStructureInfo
 }
 
 export interface SelectNodeAction extends Action {
