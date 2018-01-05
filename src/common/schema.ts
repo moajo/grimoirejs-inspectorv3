@@ -42,3 +42,14 @@ export interface AttributeInfo {
     errorText: string,
     isLazy: boolean,
 }
+
+export function convertToScriptTagInfo(tag: Element): ScriptTagInfo {
+    const id = tag.getAttribute("id");
+    const className = tag.getAttribute("class");
+    const src = tag.getAttribute("src");
+    return {
+        scriptTagId: id ? id : undefined,
+        scriptTagClass: className ? className : undefined,
+        scriptTagSrc: src ? src : undefined
+    }
+}

@@ -1,4 +1,5 @@
 import { IChannelId } from "./Channel";
+import { FrameInfo } from "./schema";
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "windowgatewayconnectresponse";
@@ -18,7 +19,7 @@ export const CHANNEL_NOTIFY_GR_EXISTS: IChannelId<boolean> = "gr_exisxts";
 export const CHANNEL_NOTIFY_GR_LIBS: IChannelId<string[]> = "gr_libs";
 export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "channel_notify_root_node";
 export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
-export const CHANNEL_GET_FRAMES = "get_frames" as IChannelId<string>;
+export const CHANNEL_GET_FRAMES = "get_frames" as IChannelId<FrameInfo>;
 
 
 export const EMBEDDING_SCRIPT_NAME = "embbed.js";
