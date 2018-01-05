@@ -6,6 +6,7 @@ import GomlNode from "grimoirejs/ref/Core/GomlNode";
 import Component from "grimoirejs/ref/Core/Component";
 import Attribute from "grimoirejs/ref/Core/Attribute";
 import { EVENT_ROOT_NODE_DID_ADDED } from "grimoirejs/ref/Core/Constants";
+import { GomlNodeInfo, ComponentInfo, AttributeInfo, NodeStructureInfo } from '../common/schema';
 
 export function notifyGrExists(connection: IConnection): GrimoireInterface | null {
     const gr = (window as any).GrimoireJS;
@@ -34,49 +35,28 @@ export function notifyRootNodes(connection: IConnection, gr: GrimoireInterface) 
 
 }
 
-interface NodeStructureInfo {
-    nodeFQN: string;
-    children: NodeStructureInfo[];
-    id: string;
-}
 
-interface GomlNodeInfo {
-    fqn: string;
-    id: string
-    components: ComponentInfo[];
-}
-interface ComponentInfo {
-    id: string,
-    fqn: string,
-    attributes: { [attributeFQN: string]: AttributeInfo }
-}
-interface AttributeInfo {
-    fqn: string,
-    converterFQN: string,
-    obtainedValue: any,
-    defaultValue: any,
-    errorText: string
-}
 function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
     const children = node.children.map(convertToNodeStructureInfo);
     return {
-        nodeFQN: node.name.fqn,
+        fqn: node.name.fqn,
         children: children,
-        id: node.id,
+        uniqueId: node.id,
+        components: node.getComponents<Component>().map(convertToComponentInfo),
     };
 }
 
 function convertToNodeInfo(node: GomlNode): GomlNodeInfo {
     return {
         fqn: node.name.fqn,
-        id: node.id,
+        uniqueId: node.id,
         components: node.getComponents<Component>().map(convertToComponentInfo)
     };
 }
 function convertToComponentInfo(component: Component): ComponentInfo {
     return {
         fqn: component.name.fqn,
-        id: component.id,
+        uniqueId: component.id,
         attributes: component.attributes.toArray().reduce((obj, attribute) => {
             obj[attribute.name.fqn] = convertToAttributeInfo(attribute);
             return obj;
@@ -90,6 +70,7 @@ function convertToAttributeInfo(attribute: Attribute): AttributeInfo {
         converterFQN: attribute.declaration.converter as any,// TODO
         obtainedValue: "",
         defaultValue: attribute.declaration.default,
-        errorText: ""
+        errorText: "",
+        isLazy: false,
     }
 }
