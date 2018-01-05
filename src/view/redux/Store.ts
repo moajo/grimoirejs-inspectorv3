@@ -4,8 +4,9 @@ import { createEpicMiddleware, combineEpics } from "redux-observable";
 import { IReduxSection } from "./IReduxSection";
 import * as InitFlow from "./common/flow/InitFlow";
 import { IState } from "./State";
+import * as TreeSelector from "./tree/selector/Selector";
 
-const sections: IReduxSection[] = [InitFlow];
+const sections: IReduxSection[] = [InitFlow, TreeSelector];
 
 function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSection> {
     const sectionArray: { [key: string]: Reducer<IState>[] } = {};
