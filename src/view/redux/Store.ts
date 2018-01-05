@@ -5,7 +5,7 @@ import Reducer from "./Reducer";
 import Epic from "./Epic";
 
 const store = createStore(Reducer, composeWithDevTools(
-    applyMiddleware(createEpicMiddleware(Epic))
+    applyMiddleware(createEpicMiddleware(Epic as any))
 ));
 
 export default store;

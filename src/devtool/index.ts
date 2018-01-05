@@ -5,8 +5,8 @@ import { PortGateway } from "../common/Gateway";
 
 (async () => {
     createView();
-    const gateway = new PortGateway("dev");
-    await connectToBackground(gateway, chrome.devtools.inspectedWindow.tabId)
+    // const gateway = new PortGateway("dev");
+    // await connectToBackground(gateway, chrome.devtools.inspectedWindow.tabId)
 })()
 
 

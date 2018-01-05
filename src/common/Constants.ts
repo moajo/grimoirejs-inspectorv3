@@ -18,6 +18,8 @@ export const CHANNEL_NOTIFY_GR_EXISTS: IChannelId<boolean> = "gr_exisxts";
 export const CHANNEL_NOTIFY_GR_LIBS: IChannelId<string[]> = "gr_libs";
 export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "channel_notify_root_node";
 export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
+export const CHANNEL_GET_FRAMES = "get_frames" as IChannelId<string>;
+
 
 export const EMBEDDING_SCRIPT_NAME = "embbed.js";
 export const EMBEDDING_SCRIPT_PATH = "dist/" + EMBEDDING_SCRIPT_NAME;

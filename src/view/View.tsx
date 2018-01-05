@@ -8,6 +8,7 @@ import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
 import Epic from './redux/Epic';
+import { GetFramesActionCreator } from './redux/common/flow/InitFlow';
 
 
 export function createView() {
@@ -20,9 +21,8 @@ export function createView() {
     </Provider>
     ,
     document.getElementById('content')
-    ,()=>{
-      Epic
-      console.log("aaaaaaaaaaa@@@@@@@@@@@@@@@@@@@")
+    , () => {
+      Store.dispatch(GetFramesActionCreator());//test
     }
   );
 }
