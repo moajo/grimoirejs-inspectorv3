@@ -7,6 +7,9 @@ import { waitConnectionEstablished } from '../common/Util';
 import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
+import Epic from './redux/Epic';
+
+
 export function createView() {
   ReactDOM.render(
     <Provider store={Store}>
@@ -17,5 +20,9 @@ export function createView() {
     </Provider>
     ,
     document.getElementById('content')
+    ,()=>{
+      Epic
+      console.log("aaaaaaaaaaa@@@@@@@@@@@@@@@@@@@")
+    }
   );
 }
