@@ -10,6 +10,7 @@ import { CHANNEL_GET_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../
 import { PutFrameActionCreator } from "../CommonActionCreator";
 import { ActionsObservable } from "redux-observable";
 import { FrameInfo } from "../../../../common/schema";
+
 export enum FlowActionTypes {
     CONNECTION_ESTABLISHED = "CONNECTION_ESTABLISHED",
     GET_FRAMES_RESPONSE = "GET_FRAMES_RESPONSE"
@@ -66,9 +67,7 @@ export function GetFramesEpic2(action: ActionsObservable<ConnectionEstablishedAc
 
             action.connection.post(CHANNEL_GET_FRAMES, null);
             return p;
-        }).flatMap(a => Observable.fromPromise(a)).do((a) => {
-            store.dispatch(PutFrameActionCreator(a.frameId, a));
-        }) as any;
+        }).flatMap(a => Observable.fromPromise(a)).map(a=>PutFrameActionCreator(a.frameId, a))as any;
 }
 
 export function reducer(store: ICommonState = DefaultCommonState, action: FlowActions) {
