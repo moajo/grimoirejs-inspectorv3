@@ -1,7 +1,8 @@
 export interface FrameInfo {
     frameId: string;
     frameURL: string;
-    trees: { [key: string]: TreeInfo }
+    trees: { [key: string]: TreeInfo };
+    plugins: string[];
 }
 
 export interface ScriptTagInfo {

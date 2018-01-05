@@ -215,7 +215,6 @@ class WindowConnection implements IConnection {
             }
             const c_packet = packet.connectionPacket
             if (c_packet.senderGatewayId !== this.gatewayId) {
-                // console.log("WCN:", this.gatewayId, this.name, packet)
                 this._subject.next(c_packet);
             }
         });
