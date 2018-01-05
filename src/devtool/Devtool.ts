@@ -29,4 +29,5 @@ export async function connectToBackground<T extends IConnection>(gateway: IGatew
   const msg = await establishWaiter;
   // console.log("bg is ready:", msg);
   // connection.post("hoge2", "hogehoge")
+  return connection;
 }

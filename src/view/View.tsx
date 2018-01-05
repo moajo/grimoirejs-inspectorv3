@@ -7,8 +7,8 @@ import { waitConnectionEstablished } from '../common/Util';
 import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
-import Epic from './redux/Epic';
 import { ContextNotFound } from './components/ContextNotFound';
+import { GetFramesActionCreator } from './redux/common/flow/InitFlow';
 
 
 export function createView() {
@@ -21,8 +21,7 @@ export function createView() {
     ,
     document.getElementById('gr-inspector')
     , () => {
-      Epic
-      console.log("aaaaaaaaaaa@@@@@@@@@@@@@@@@@@@")
+      Store.dispatch(GetFramesActionCreator());
     }
   );
 }

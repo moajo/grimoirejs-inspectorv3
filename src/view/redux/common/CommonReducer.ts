@@ -33,3 +33,4 @@ export default function commonReducer(store: ICommonState = DefaultCommonState, 
     }
     return store;
 }
+
