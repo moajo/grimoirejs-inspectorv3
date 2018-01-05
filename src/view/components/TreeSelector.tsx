@@ -7,6 +7,7 @@ import cx from "classnames";
 import SelectionFilter from '../SelectionFilter';
 import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
+import { switchTreeSelector } from '../redux/tree/selector/Selector';
 
 interface IndicatorLabelProps {
     selectedTree: TreeInfo;
@@ -36,6 +37,7 @@ const IndicatorLabel: React.SFC<IndicatorLabelProps> = (props) => {
 interface TreeSelectorProps extends DispatchProp<TreeSelectorProps> {
     selectedTree?: TreeInfo;
     frames: { [key: string]: FrameInfo | undefined; }
+    open: boolean;
 }
 
 const TreeSelector: React.SFC<TreeSelectorProps> = (props) => {
@@ -44,15 +46,20 @@ const TreeSelector: React.SFC<TreeSelectorProps> = (props) => {
         (<p className={cx(styl.labelContainer, styl.disabledLabel)}>
             No context found
         </p >);
-    return (<div className={styl.indicatorContainer}>
+    const toggleOpen = () => {
+        props.dispatch!(switchTreeSelector(!props.open));
+    };
+    return (<div className={styl.indicatorContainer} onClick={toggleOpen}>
         {indicator}
         <p className={cx(styl.spinnerContainer, { [styl.disabledIcon]: !initialized })}>
             <i className="fas fa-caret-down" />
         </p>
+
     </div >);
 };
 
 export default connect((state: IState): TreeSelectorProps => ({
     selectedTree: SelectionFilter.getCurrentTree(state),
-    frames: state.common.frames
+    frames: state.common.frames,
+    open: state.tree.treeSelector.openSelector
 }))(TreeSelector);

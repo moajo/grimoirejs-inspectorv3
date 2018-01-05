@@ -7,9 +7,10 @@ import * as GetFramesFlow from "./common/flow/GetFramesFlow";
 import * as MainFlow from "./common/flow/MainFlow";
 import * as SelectTreeFlow from "./common/flow/SelectTreeFlow";
 import { IState } from "./State";
+import * as TreeSelector from "./tree/selector/Selector";
 import { reduce } from "rxjs/operators/reduce";
 
-const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow];
+const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow, TreeSelector];
 
 function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSection> {
     const sectionArray: { [key: string]: Reducer<IState>[] } = {};
