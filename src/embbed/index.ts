@@ -1,5 +1,5 @@
 import { WindowGateway } from "../common/Gateway";
-import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_GET_FRAMES } from "../common/constants";
+import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_GET_FRAMES, CHANNEL_SELECT_TREE } from "../common/constants";
 import { notifyLibs, notifyGrExists, notifyRootNodes } from "./EmbeddedScript";
 import { GrimoireInterface } from "grimoirejs/ref/Tool/Types";
 import { DEFAULT_NAMESPACE } from "grimoirejs/ref/Core/Constants";
@@ -13,41 +13,39 @@ async function main() {
 
     const establishWaiter = connection.open(CHANNEL_CONNECTION_ESTABLISHED).first().toPromise();
 
-    // connection.open("hoge2").subscribe(a => {
-    //     console.log("##########", a)
-    // })
-    connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
+    // extract gr infomation.
+    const gr = (window as any).GrimoireJS as GrimoireInterface;
+    const frame = { // TODO iframe対応
+        frameId: "main",
+        frameURL: location.href,
+        trees: {}
+    } as FrameInfo;
+
+    for (const key in gr.rootNodes) {
+        const rootNode = gr.rootNodes[key];
+        const tag = rootNode.companion.get("grimoirejs.scriptElement");
+        const tagInfo = convertToScriptTagInfo(tag);
+        frame.trees[rootNode.id] = {
+            scriptTag: tagInfo,
+            rootNodeId: rootNode.id,
+        }
+    }
+    const frames:{[key:string]:FrameInfo} = {"main":frame}
+
+
 
     connection.open(CHANNEL_GET_FRAMES).subscribe(a => {
-        const gr = ((window as any).gr as GrimoireInterface);
-
-        const frame = {
-            frameId: "main",
-            frameURL: location.href,
-            trees: {}
-        } as FrameInfo;
-
-        for (const key in gr.rootNodes) {
-            const rootNode = gr.rootNodes[key];
-            const tag = rootNode.companion.get("grimoirejs.scriptElement");
-            const tagInfo = convertToScriptTagInfo(tag);
-            frame.trees[rootNode.id] = {
-                scriptTag: tagInfo,
-                rootNodeId: rootNode.id,
-            }
-        }
-
         connection.post(CHANNEL_GET_FRAMES, frame)
+    });
+    connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
+        const rootNode = gr.rootNodes[req.rootNodeId];
+        
     })
 
-    await establishWaiter;
-    // connection.post("hoge", "@@aa")
-    const gr = notifyGrExists(connection);
-    if (gr) {
-        notifyLibs(connection, gr);
-        notifyRootNodes(connection, gr);
-    }
+    connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
 
+    await establishWaiter;
+    // connection is established here
 }
 
 main();
