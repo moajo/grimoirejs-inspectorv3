@@ -1,0 +1,38 @@
+.indicatorContainer
+    height 48px
+    display grid
+    grid-template-columns 1fr 32px
+    grid-template-rows 1fr auto 1fr
+    grid-template-areas "A1 A2" "LABEL SPINNER" "A3 A4"
+    text-align center
+    border 1px solid gray
+    &:hover
+        background-color lightgray
+        cursor pointer
+    p
+        margin 0px
+.spinnerContainer
+    grid-area SPINNER
+.labelContainer
+    grid-area LABEL
+
+.disabledIcon,.disabledLabel
+    color gray
+
+.indicatorLabelContainer
+    grid-area LABEL
+    display grid
+    grid-template-columns 45px 1fr
+    grid-template-areas "ICON CONTEXTLABEL"
+
+.indicatorLabelIconContainer
+    grid-area ICON 
+    color #9B90C0
+
+.indicatorLabelLabelContainer
+    grid-area CONTEXTLABEL
+
+.idLabel
+    color #FE8780
+.classLabel
+    color #A2BECD

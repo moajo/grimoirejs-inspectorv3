@@ -9,13 +9,14 @@ import { Provider } from "react-redux";
 import Store from "./redux/Store";
 import { ContextNotFound } from './components/ContextNotFound';
 import { GetFramesActionCreator } from './redux/common/flow/InitFlow';
+import TreeSelector from './components/TreeSelector';
 
 
 export function createView() {
   ReactDOM.render(
     <Provider store={Store}>
-      <div>
-        <ContextNotFound />
+      <div style={{ width: "300px" }}>
+        <TreeSelector />
       </div>
     </Provider>
     ,

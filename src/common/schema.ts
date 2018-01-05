@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 export interface FrameInfo {
     frameId: string;
     frameURL: string;
@@ -7,7 +9,7 @@ export interface FrameInfo {
 
 export interface ScriptTagInfo {
     scriptTagId?: string;
-    scriptTagClass?: string;
+    scriptTagClass?: string[];
     scriptTagSrc?: string;
 }
 
@@ -46,7 +48,7 @@ export interface AttributeInfo {
 
 export function convertToScriptTagInfo(tag: Element): ScriptTagInfo {
     const id = tag.getAttribute("id");
-    const className = tag.getAttribute("class");
+    const className = _.toArray(tag.classList);
     const src = tag.getAttribute("src");
     return {
         scriptTagId: id ? id : undefined,
