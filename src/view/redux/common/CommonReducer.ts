@@ -4,10 +4,30 @@ import CommonActionType from "./CommonActionType";
 
 export default function commonReducer(store: ICommonState = DefaultCommonState, action: CommonAction): ICommonState {
     switch (action.type) {
-        case CommonActionType.COMMON_EXAMPLE_ACTION:
+        case CommonActionType.GET_FRAMES:
             store = {
                 ...store,
-                test: true
+            };
+            break;
+        case CommonActionType.PUT_FRAME:
+            store = {
+                ...store,
+                frames: {
+                    ...store.frames,
+                    [action.frameId]: action.frameInfo
+                }
+            };
+            break;
+        case CommonActionType.SELECT_NODE:
+            store = {
+                ...store,
+                nodeSelection: action.selection
+            };
+            break;
+        case CommonActionType.SELECT_TREE:
+            store = {
+                ...store,
+                treeSelection: action.selection
             };
             break;
     }

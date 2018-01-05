@@ -11,11 +11,11 @@ export interface NodeSelection {
 }
 
 export interface ICommonState {
-    frames: FrameInfo[];
+    frames: { [frameId: string]: FrameInfo | undefined };
     treeSelection?: TreeSelection;
     nodeSelection?: NodeSelection;
 }
 
 export const DefaultCommonState: ICommonState = {
-    frames: [],
+    frames: {},
 };
