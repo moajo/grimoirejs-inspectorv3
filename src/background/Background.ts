@@ -40,6 +40,9 @@ export async function connectionConnector<
         }).subscribe(tabConnectionSubject);
     })
     csGateway = new WaitingEstablishedGateway(csGateway,cn=>{
+        cn.listen().subscribe(a => {
+            console.log(`[cs=>bg]`, a.channel, a.payload,a.senderGatewayId)
+          })
         cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
             return {
                 tabID: tabID,
@@ -51,28 +54,6 @@ export async function connectionConnector<
 
     const csConnections = csGateway.standbyConnection(CONNECTION_CS_TO_BG).subscribe();
     const devConnections = gateway.standbyConnection(CONNECTION_BG_TO_DEV).subscribe();
-    // csConnections.subscribe(cnInit => {
-    //     cnInit.init(cn => {
-    //         cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
-    //             return {
-    //                 tabID: tabID,
-    //                 connection: cn,
-    //                 type: "cs",
-    //             } as TabConnectionWaiting
-    //         }).subscribe(tabConnectionSubject);
-    //     })
-    // })
-    // devConnections.subscribe(cnInit => {
-    //     cnInit.init(cn => {
-    //         cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
-    //             return {
-    //                 tabID: tabID,
-    //                 connection: cn,
-    //                 type: "dev",
-    //             }as TabConnectionWaiting
-    //         }).subscribe(tabConnectionSubject);
-    //     })
-    // })
 
     tabConnectionSubject.groupBy(a => a.tabID).subscribe(a => {
         a.bufferCount(2).subscribe(b => {

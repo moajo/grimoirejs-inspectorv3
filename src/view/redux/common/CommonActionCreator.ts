@@ -1,9 +1,16 @@
-import { GetFramesAction, PutFrameAction, ConnectToServerAction, ConnectionEstablishedAction, NotifyTreeStructureAction, SelectTreeAction, NotifyAttributeChangeAction } from "./CommonAction";
-import CommonActionType from "./CommonActionType";
-import { IConnection } from "../../../common/Gateway";
-import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
-import { CHANNEL_NOTIFY_GR_EXISTS } from "../../../common/constants";
-import { TreeSelection } from "./CommonState";
+import { IConnection } from '../../../common/Gateway';
+import { FrameInfo, NodeStructureInfo } from '../../../common/schema';
+import {
+    ConnectionEstablishedAction,
+    ConnectToServerAction,
+    GetFramesAction,
+    NotifyAttributeChangeAction,
+    NotifyTreeStructureAction,
+    PutFrameAction,
+    SelectTreeAction,
+} from './CommonAction';
+import CommonActionType from './CommonActionType';
+import { TreeSelection } from './CommonState';
 
 export function ConnectToServerActionCreator(): ConnectToServerAction {
     return {

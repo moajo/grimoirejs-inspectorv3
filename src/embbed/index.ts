@@ -1,11 +1,16 @@
-import { WindowGateway } from "../common/Gateway";
-import { CHANNEL_CONNECTION_ESTABLISHED, CONNECTION_CS_TO_EMB, CHANNEL_NOTIFY_GR_EXISTS, CHANNEL_PUT_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE, CHANNEL_SELECT_NODE } from "../common/constants";
-import { notifyLibs, notifyGrExists, notifyRootNodes } from "./EmbeddedScript";
-import { GrimoireInterface } from "grimoirejs/ref/Tool/Types";
-import { DEFAULT_NAMESPACE } from "grimoirejs/ref/Core/Constants";
-import Namespace from "grimoirejs/ref/Core/Namespace";
-import { convertToScriptTagInfo, FrameInfo, convertToNodeStructureInfo } from "../common/schema";
-import WaitingEstablishedGateway from "../common/WrapperGateway";
+import { GrimoireInterface } from 'grimoirejs/ref/Tool/Types';
+
+import {
+    CHANNEL_CONNECTION_ESTABLISHED,
+    CHANNEL_NOTIFY_TREE_STRUCTURE,
+    CHANNEL_PUT_FRAMES,
+    CHANNEL_SELECT_NODE,
+    CHANNEL_SELECT_TREE,
+    CONNECTION_CS_TO_EMB,
+} from '../common/constants';
+import { WindowGateway } from '../common/Gateway';
+import { convertToNodeStructureInfo, convertToScriptTagInfo, FrameInfo } from '../common/schema';
+import WaitingEstablishedGateway from '../common/WrapperGateway';
 
 async function main() {
     const gateway = new WindowGateway("page:cs");
@@ -45,13 +50,8 @@ async function main() {
         connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector => {
             nodeSelector.frameID
         })
-
-        connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
-        console.log("###########@@@@2")
-
     })
 
-    console.log("###########@@@@1embconnect")
     const connection = await wrapper.connect(CONNECTION_CS_TO_EMB);
 
     // const establishWaiter = connection.open(CHANNEL_CONNECTION_ESTABLISHED).first().toPromise();
