@@ -1,12 +1,15 @@
 import { CONTENT_SCRIPT_PATH } from '../common/constants';
 import { PortGateway, TabGateway } from '../common/Gateway';
-import { connectionConnector, injectContentScript } from './Background';
+import { connectionConnector } from './Background';
+
+chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+    if (msg === "tabid") {
+        sendResponse(sender.tab!.id);
+    }
+});
 
 
 const dev_gateway = new PortGateway("bg:dev");
+const cs_gateway = new PortGateway("bg:cs");
 
-connectionConnector(dev_gateway, (connectionName: string, tabId: number) => {
-    return new TabGateway(connectionName, tabId);
-}, async (tabId, csScriptInjector) => {
-    await injectContentScript(tabId, CONTENT_SCRIPT_PATH)
-});
+connectionConnector(dev_gateway, cs_gateway);

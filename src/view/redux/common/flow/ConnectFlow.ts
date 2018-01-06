@@ -17,7 +17,7 @@ type FlowActions = ConnectionEstablishedAction;
 export function ConnectToServerEpic(action: ActionsObservable<CommonAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
     return action.ofType(CommonActionType.CONNECT_TO_SERVER).map(async (action: Action) => {
         const gateway = new WindowGateway("dev");
-        const connection = await connectToBackground(gateway, 12345);//dummy tab id
+        const connection = await connectToBackground(gateway, 123);//dummy tab id TODO fix
         return ConnectionEstablishedActionCreator(connection);
     }).flatMap(a => Observable.fromPromise(a)) as any;
 }

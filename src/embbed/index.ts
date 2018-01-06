@@ -5,51 +5,60 @@ import { GrimoireInterface } from "grimoirejs/ref/Tool/Types";
 import { DEFAULT_NAMESPACE } from "grimoirejs/ref/Core/Constants";
 import Namespace from "grimoirejs/ref/Core/Namespace";
 import { convertToScriptTagInfo, FrameInfo, convertToNodeStructureInfo } from "../common/schema";
+import WaitingEstablishedGateway from "../common/WrapperGateway";
 
 async function main() {
     const gateway = new WindowGateway("page:cs");
 
-    const connection = await gateway.connect(CONNECTION_CS_TO_EMB);
+    const wrapper = new WaitingEstablishedGateway(gateway, connection => {
+        // extract gr infomation.
+        const gr = (window as any).GrimoireJS as GrimoireInterface;
+        const frame = { // TODO iframe対応
+            frameId: "main",
+            frameURL: location.href,
+            trees: {}
+        } as FrameInfo;
 
-    const establishWaiter = connection.open(CHANNEL_CONNECTION_ESTABLISHED).first().toPromise();
-
-    // extract gr infomation.
-    const gr = (window as any).GrimoireJS as GrimoireInterface;
-    const frame = { // TODO iframe対応
-        frameId: "main",
-        frameURL: location.href,
-        trees: {}
-    } as FrameInfo;
-
-    for (const key in gr.rootNodes) {
-        const rootNode = gr.rootNodes[key];
-        const tag = rootNode.companion.get("grimoirejs.scriptElement");
-        const tagInfo = convertToScriptTagInfo(tag);
-        frame.trees[rootNode.id] = {
-            scriptTag: tagInfo,
-            rootNodeId: rootNode.id,
+        for (const key in gr.rootNodes) {
+            const rootNode = gr.rootNodes[key];
+            const tag = rootNode.companion.get("grimoirejs.scriptElement");
+            const tagInfo = convertToScriptTagInfo(tag);
+            frame.trees[rootNode.id] = {
+                scriptTag: tagInfo,
+                rootNodeId: rootNode.id,
+            }
         }
-    }
-    const frames: { [key: string]: FrameInfo } = { "main": frame }
+        const frames: { [key: string]: FrameInfo } = { "main": frame }
 
 
 
-    connection.open(CHANNEL_PUT_FRAMES).subscribe(a => {
-        connection.post(CHANNEL_PUT_FRAMES, frame)
-    });
-    connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
-        const rootNode = gr.rootNodes[req.rootNodeId];
-        const nodeStructure = convertToNodeStructureInfo(rootNode);
-        connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
+        connection.open(CHANNEL_PUT_FRAMES).subscribe(a => {
+            console.log(`[emb] CHANNEL_PUT_FRAMES: frame is `,frame)
+            connection.post(CHANNEL_PUT_FRAMES, frame)
+        });
+        connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
+            const rootNode = gr.rootNodes[req.rootNodeId];
+            const nodeStructure = convertToNodeStructureInfo(rootNode);
+            connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
+        })
+
+        connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector => {
+            nodeSelector.frameID
+        })
+
+        connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
+        console.log("###########@@@@2")
+
     })
 
-    connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector=>{
-        nodeSelector.frameID
-    })
+    console.log("###########@@@@1embconnect")
+    const connection = await wrapper.connect(CONNECTION_CS_TO_EMB);
 
-    connection.post(CHANNEL_CONNECTION_ESTABLISHED, "emb is ready!");
+    // const establishWaiter = connection.open(CHANNEL_CONNECTION_ESTABLISHED).first().toPromise();
 
-    await establishWaiter;
+
+
+    // await establishWaiter;
     // connection is established here
 }
 

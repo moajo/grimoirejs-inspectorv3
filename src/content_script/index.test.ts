@@ -6,5 +6,6 @@ console.log("content script is up")
 contentScriptMain(
     new WindowGateway("cs:emb"),
     new WindowGateway("cs:bg"),
-    EMBEDDING_SCRIPT_NAME
+    EMBEDDING_SCRIPT_NAME,
+    123,// dummy
 )
