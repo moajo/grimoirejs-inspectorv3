@@ -19,7 +19,6 @@ export interface ConnectToServerAction extends Action {
 
 export interface ConnectionEstablishedAction extends Action {
     type: CommonActionType.CONNECTION_ESTABLISHED;
-    connection: IConnection;
 }
 
 export interface GetFramesAction extends Action {

@@ -8,19 +8,24 @@ import { FrameInfo } from "../../../../common/schema";
 import { CHANNEL_PUT_FRAMES } from "../../../../common/constants";
 import { PutFrameActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
+import { Dependency } from "../CommonDependency";
 
 
 
-export function GetFramesEpic(action: ActionsObservable<CommonAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
+export function GetFramesEpic(
+    action: ActionsObservable<CommonAction>, 
+    store: MiddlewareAPI<IState>,
+    dependency:Dependency,
+): Observable<CommonAction> {
     return action.ofType(CommonActionType.GET_FRAMES)
         .map(async (action) => {
             const p = new Promise<FrameInfo>(resolve => {
-                store.getState().common.connection!.open(CHANNEL_PUT_FRAMES).subscribe(a => {
+                dependency.connection!.open(CHANNEL_PUT_FRAMES).subscribe(a => {
                     resolve(a)
                 })
             });
 
-            store.getState().common.connection!.post(CHANNEL_PUT_FRAMES, null);
+            dependency.connection!.post(CHANNEL_PUT_FRAMES, null);
             return p;
         }).flatMap(a => Observable.fromPromise(a))
         .map(a => PutFrameActionCreator(a.frameId, a)) as any;
