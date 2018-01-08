@@ -2,11 +2,12 @@ import { TreeSelection } from '../view/redux/common/CommonState';
 import { IChannelId } from './Channel';
 import { NodeStructureInfo, TreeInfo } from './schema';
 
-export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
-export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "windowgatewayconnectresponse";
+export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST";
+export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE";
+export const DISCONNECT_SIGNAL = "DISCONNECT_SIGNAL";
 
-export const CONNECTION_CS_TO_EMB = "cs to emb";
-export const CONNECTION_CS_TO_BG = "cs to bg";
+export const CONNECTION_CS_TO_EMB = "CONNECTION_CS_TO_EMB";
+export const CONNECTION_CS_TO_BG = "CONNECTION_CS_TO_BG";
 export const CONNECTION_BG_TO_DEV = "CONNECTION_BG_TO_DEV";
 export const CONNECTION_CS_TO_IFRAME = "CONNECTION_CS_TO_IFRAME";
 

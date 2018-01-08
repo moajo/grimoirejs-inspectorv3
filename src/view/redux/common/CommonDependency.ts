@@ -1,5 +1,5 @@
-import { IConnection } from "../../../common/Gateway";
+import { IConnection } from "../../../common/Connection";
 
-export interface Dependency{
-    connection?:IConnection
+export interface Dependency {
+    connection?: IConnection
 }

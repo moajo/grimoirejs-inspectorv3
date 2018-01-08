@@ -6,8 +6,8 @@ import {
     CONNECTION_BG_TO_DEV,
     CONNECTION_CS_TO_BG,
 } from '../common/constants';
-import { IConnection, IGateway, redirect } from '../common/Gateway';
-import WaitingEstablishedGateway from '../common/WrapperGateway';
+import { IGateway } from '../common/Gateway';
+import { IConnection, redirect } from '../common/Connection';
 
 type TabConnectionWaiting = {
     tabID: number,
@@ -23,33 +23,40 @@ export async function connectionConnector<
     csGateway: IGateway<U>,
 ) {
     const tabConnectionSubject = new ReplaySubject<TabConnectionWaiting>();
-    gateway = new WaitingEstablishedGateway(gateway, cn => {
-        cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
-            return {
-                tabID: tabID,
-                connection: cn,
-                type: "dev",
-            } as TabConnectionWaiting
-        }).subscribe(tabConnectionSubject);
-    })
-    csGateway = new WaitingEstablishedGateway(csGateway, cn => {
-        cn.listen().subscribe(a => {
-            console.log(`[cs=>bg]`, a.channel, a.payload, a.senderGatewayId)
-        });
-        cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
-            return {
-                tabID: tabID,
-                connection: cn,
-                type: "cs",
-            } as TabConnectionWaiting
-        }).subscribe(tabConnectionSubject);
-    })
 
-    const csConnections = csGateway.standbyConnection(CONNECTION_CS_TO_BG).subscribe();
-    const devConnections = gateway.standbyConnection(CONNECTION_BG_TO_DEV).subscribe();
+    const csConnections = csGateway.waitingConnection(CONNECTION_CS_TO_BG)
+        .do(cn => {
+            cn.connection.toObservable().subscribe(a => {
+                console.log(`[cs=>bg]`, a.channel, a.payload, a.senderGatewayId)
+            });
+        })
+        .flatMap(cnp =>
+            cnp.startWith(cn =>
+                cn.open(CHANNEL_NOTIFY_TAB_ID).first().map(tabID =>
+                    ({
+                        tabID: tabID,
+                        connection: cn,
+                        type: "cs",
+                    } as TabConnectionWaiting)
+                )
+            )
+        )
+        .subscribe(tabConnectionSubject);
+
+    const devConnections = gateway.waitingConnection(CONNECTION_BG_TO_DEV).flatMap(cnp =>
+        cnp.startWith(cn =>
+            cn.open(CHANNEL_NOTIFY_TAB_ID).first().map(tabID =>
+                ({
+                    tabID: tabID,
+                    connection: cn,
+                    type: "cs",
+                } as TabConnectionWaiting)
+            )
+        )
+    ).subscribe(tabConnectionSubject);
 
     tabConnectionSubject.groupBy(a => a.tabID).subscribe(a => {
-        a.bufferCount(2).subscribe(b => {
+        a.bufferCount(2).first().subscribe(b => {
             redirect(b[0].connection, b[1].connection);
             b.forEach(cn => {
                 cn.connection.post(CHANNEL_TAB_CONNECTION_ESTABLISHED, null);

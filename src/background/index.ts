@@ -1,5 +1,4 @@
-import { CONTENT_SCRIPT_PATH } from '../common/constants';
-import { PortGateway, TabGateway } from '../common/Gateway';
+import { PortGateway } from '../common/Gateway';
 import { connectionConnector } from './Background';
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {

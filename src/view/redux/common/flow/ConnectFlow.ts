@@ -1,5 +1,5 @@
 import { Action, MiddlewareAPI } from "redux";
-import { IConnection, PortGateway, WindowGateway } from "../../../../common/Gateway";
+import { PortGateway, WindowGateway } from "../../../../common/Gateway";
 import { Observable } from "rxjs/Observable";
 import { IState } from "../../State";
 import { connectToBackground } from "../../../../devtool/Devtool";

@@ -1,17 +1,20 @@
 import { CHANNEL_NOTIFY_TAB_ID, CHANNEL_TAB_CONNECTION_ESTABLISHED, CONNECTION_BG_TO_DEV } from '../common/constants';
-import { IConnection, IGateway } from '../common/Gateway';
+import { IGateway } from '../common/Gateway';
 import { postAndWaitReply } from '../common/Util';
-import WaitingEstablishedGateway from '../common/WrapperGateway';
+import { IConnection } from '../common/Connection';
 
 export async function connectToBackground<T extends IConnection>(gateway: IGateway<T>, tabId: number) {
 
   console.log("[dev] start")
 
-  const connection = await (new WaitingEstablishedGateway(gateway)).connect(CONNECTION_BG_TO_DEV);
+  const connection = (await gateway.connect(CONNECTION_BG_TO_DEV)).startWith(cn => {
+    cn.toObservable().subscribe(a => {
+      console.log(`[dev]recieve: `, a.channel, a.payload, a.senderGatewayId)
+    })
+    return cn
+  });
 
-  connection.listen().subscribe(a => {
-    console.log(`[dev]recieve: `, a.channel, a.payload,a.senderGatewayId)
-  })
+
   await postAndWaitReply(connection, CHANNEL_NOTIFY_TAB_ID, tabId, CHANNEL_TAB_CONNECTION_ESTABLISHED);
 
   return connection;

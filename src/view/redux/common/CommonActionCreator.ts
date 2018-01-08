@@ -1,4 +1,3 @@
-import { IConnection } from '../../../common/Gateway';
 import { NodeStructureInfo } from '../../../common/schema';
 import {
     ConnectionEstablishedAction,
