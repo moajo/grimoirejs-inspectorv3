@@ -9,27 +9,77 @@ import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
 import { switchTreeSelector } from '../redux/tree/selector/Selector';
 
+interface IdClassLabelProps {
+    id?: string;
+    classNames?: string[];
+    idClass: string;
+    classNameClass: string;
+    emptyLabel?: string;
+}
+
+const IdClassLabel: React.SFC<IdClassLabelProps> = (props) => {
+    let id = null;
+    let className = null;
+    if (props.id) {
+        id = `#${props.id}`;
+    }
+    if (props.classNames && !_.isEmpty(props.classNames)) {
+        className = `.${props.classNames.join(".")}`;
+    }
+    if (!id && !className) {
+        return (<span>{props.emptyLabel}</span>)
+    }
+    return (<span><span className={props.idClass}>{id}</span><span className={props.classNameClass}>{className}</span></span>);
+};
+interface TreeElementProps {
+    tree: TreeInfo;
+}
+
+const TreeElement: React.SFC<TreeElementProps> = (props) => {
+    const id = props.tree.scriptTag ? props.tree.scriptTag.scriptTagId : undefined;
+    const className = props.tree.scriptTag ? props.tree.scriptTag.scriptTagClass : undefined;
+    return (<div className={styl.treeElementContainer}>
+        <p>
+            {<IdClassLabel id={id} classNames={className} idClass={styl.idLabel} classNameClass={styl.classLabel} emptyLabel={`No NAME(${props.tree.rootNodeId})`} />}
+        </p>
+        <p>{props.tree.scriptTag ? props.tree.scriptTag.scriptTagSrc : null}</p>
+    </div>);
+};
+
+interface FrameElementProps {
+    frame: FrameInfo;
+}
+
+const FrameElement: React.SFC<FrameElementProps> = (props) => {
+    return (<div className={styl.frameElementContainer}>
+        <p className={styl.iconContainer}><i className="far fa-window-maximize"></i></p>
+        <p className={styl.urlContainer}>{props.frame.frameURL}</p>
+        <div className={styl.canvasListContainer}>{_.map(props.frame.trees, v => (<TreeElement tree={v} />))}</div>
+    </div>)
+};
+
+
+const TreeSelectorExpander: React.SFC<TreeSelectorProps> = (props) => {
+    return (
+        <div>
+            {_.flatMap(props.frames, (value, key) => (<FrameElement frame={value!} />))}
+        </div>
+    );
+};
+
 interface IndicatorLabelProps {
     selectedTree: TreeInfo;
 }
 
 const IndicatorLabel: React.SFC<IndicatorLabelProps> = (props) => {
     let idClass = props.selectedTree.scriptTag;
-    let id = "";
-    let className = "";
-    if (idClass && idClass.scriptTagId) {
-        id = `#${idClass.scriptTagId}`;
-    }
-    if (idClass && idClass.scriptTagClass) {
-        className = `.${idClass.scriptTagClass.join(".")}`;
-    }
     return (
         <div className={styl.indicatorLabelContainer}>
             <p className={styl.indicatorLabelIconContainer}>
                 <i className="fas fa-eye"></i>
             </p>
             <p className={styl.indicatorLabelLabelContainer}>
-                <span className={styl.idLabel}>{id}</span><span className={styl.classLabel}>{className}</span>
+                {idClass ? (<IdClassLabel id={idClass.scriptTagId} classNames={idClass.scriptTagClass} idClass={styl.idLabel} classNameClass={styl.classLabel} />) : null}
             </p>
         </div>);
 }
@@ -54,12 +104,12 @@ const TreeSelector: React.SFC<TreeSelectorProps> = (props) => {
         <p className={cx(styl.spinnerContainer, { [styl.disabledIcon]: !initialized })}>
             <i className="fas fa-caret-down" />
         </p>
-
+        <div className={styl.expanderOrigin}>{props.open ? (<TreeSelectorExpander {...props} />) : null}</div>
     </div >);
 };
 
 export default connect((state: IState): TreeSelectorProps => ({
-    selectedTree: SelectionFilter.getCurrentTree(state),
+    selectedTree: { scriptTag: { scriptTagId: "AAA", scriptTagClass: ["A", "B", "C"] } },//SelectionFilter.getCurrentTree(state),
     frames: state.common.frames,
     open: state.tree.treeSelector.openSelector
 }))(TreeSelector);

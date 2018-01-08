@@ -1,4 +1,5 @@
 .indicatorContainer
+    position relative
     height 48px
     display grid
     grid-template-columns 1fr 32px
@@ -36,3 +37,26 @@
     color #FE8780
 .classLabel
     color #A2BECD
+
+.expanderOrigin
+    position absolute
+    top 46px
+    left -1px
+    right -1px
+
+.frameElementContainer
+    border 1px solid gray
+    display grid
+    grid-template-columns 32px 1fr
+    grid-template-rows auto auto
+    grid-template-areas "ICON URL" "A1 CANVASES"
+
+.iconContainer
+    grid-area ICON
+.urlContainer
+    grid-area URL
+.canvasListContainer
+    grid-area CANVASES
+.treeElementContainer
+    border 1px solid gray
+    margin 0px -1px -1px 0px
