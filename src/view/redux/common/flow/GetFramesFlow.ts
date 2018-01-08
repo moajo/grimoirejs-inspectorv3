@@ -12,22 +12,18 @@ import { Dependency } from "../CommonDependency";
 
 
 export function GetFramesEpic(
-    action: ActionsObservable<CommonAction>, 
+    actions: ActionsObservable<CommonAction>,
     store: MiddlewareAPI<IState>,
-    dependency:Dependency,
+    dependency: Dependency,
 ): Observable<CommonAction> {
-    return action.ofType(CommonActionType.GET_FRAMES)
-        .map(async (action) => {
-            const p = new Promise<FrameStructure>(resolve => {
-                dependency.connection!.open(CHANNEL_PUT_FRAMES).subscribe(a => {
-                    resolve(a)
-                })
-            });
-
-            dependency.connection!.post(CHANNEL_PUT_FRAMES, null);
-            return p;
-        }).flatMap(a => Observable.fromPromise(a))
-        .map(a => PutFrameActionCreator(a.uuid, a)) as any;
+    const p = actions.ofType(CommonActionType.GET_FRAMES).first().flatMap(() => {
+        return dependency.connection!.open(CHANNEL_PUT_FRAMES).map(a => PutFrameActionCreator(a.uuid, a))
+    });
+    actions.ofType(CommonActionType.GET_FRAMES).subscribe(a => {
+        console.log("@[flow] GET_FRAMES")
+        dependency.connection!.post(CHANNEL_PUT_FRAMES, null);
+    })
+    return p;
 }
 
 export const storeSection = "common";

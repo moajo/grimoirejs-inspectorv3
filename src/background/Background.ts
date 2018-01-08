@@ -63,49 +63,4 @@ export async function connectionConnector<
             });
         });
     });
-
-    // console.log(`@@@[bg] up`)
-    // for await (const connectionInit of connectionGenerator(gateway, CONNECTION_BG_TO_DEV.regex)) {
-    //     console.log(`@@@[bg] connection come in `)
-    //     connectionInit.init(async connection => {
-    //         const tabId = Number(connection.name.match(CONNECTION_BG_TO_DEV.regex)![1]);
-    //         const cs_gateway = csGatewayGenerator("bg:cs", tabId);
-    //         const waiting_cs_connection = waitConnection(cs_gateway, CONNECTION_CS_TO_BG)
-    //         // await csInjector(tabId, CONTENT_SCRIPT_PATH)
-    //         const csConnectionInit = await waiting_cs_connection;
-    //         await csConnectionInit.init(csConnection => {
-    //             redirect(connection, csConnection, true);
-    //         })
-    //     });
-    // }
 }
-
-
-// function connectionGenerator<T extends IConnection>(gateway: IGateway<T>, connectionName: string) {
-//     return Observable.defer<T>(() => gateway.standbyConnection(connectionName)).repeat()
-// }
-
-// function csConnectionGenerator<T extends IConnection>(csGateway: IGateway<T>) {
-//     return connectionGenerator(csGateway, CONNECTION_CS_TO_BG);
-// }
-
-// function devConnectionGenerator<T extends IConnection>(devGateway: IGateway<T>) {
-//     return connectionGenerator(devGateway, CONNECTION_BG_TO_DEV);
-// }
-
-
-// export async function* connectionGenerator<T extends IConnection>(gateway: IGateway<T>, connectionName: RegExp) {
-//     while (true) {
-//         yield await waitConnection(gateway, connectionName);
-//     }
-// }
-
-// export async function injectContentScript(tabId: number, path: string) {
-//     return new Promise(resolve => {
-//         chrome.tabs.executeScript(tabId, {
-//             file: path
-//         }, () => {
-//             resolve()
-//         });
-//     });
-// }
