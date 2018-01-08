@@ -8,20 +8,20 @@ import { NodeStructureInfo } from "../../../../common/schema";
 import { CHANNEL_PUT_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../../../../common/constants";
 import { PutFrameActionCreator, NotifyTreeStructureActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
+import { Dependency } from "../CommonDependency";
 
 
 
-export function SelectTreeEpic(action: ActionsObservable<SelectTreeAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
+export function SelectTreeEpic(action: ActionsObservable<SelectTreeAction>, store: MiddlewareAPI<IState>, dependency: Dependency): Observable<CommonAction> {
     return action.ofType(CommonActionType.SELECT_TREE)
         .map(async (action) => {
-            debugger
             const p = new Promise<NodeStructureInfo>(resolve => {
-                store.getState().common.connection!.open(CHANNEL_NOTIFY_TREE_STRUCTURE).subscribe(a => {
+                dependency.connection!.open(CHANNEL_NOTIFY_TREE_STRUCTURE).subscribe(a => {
                     resolve(a)
                 })
             });
 
-            store.getState().common.connection!.post(CHANNEL_SELECT_TREE, action.selection);
+            dependency.connection!.post(CHANNEL_SELECT_TREE, action.selection);
             return NotifyTreeStructureActionCreator(await p, action.selection);
         }).flatMap(a => Observable.fromPromise(a)) as any;
 }
