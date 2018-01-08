@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "inspector-v3",
-    "short_name": "TODO",
+    "name": "grimoirejs-inspector-v3",
+    "short_name": "inspector-v3",
     "version": "0.0.0",
     "minimum_chrome_version": "10.0",
     "devtools_page": "html/devtool_init.html",
