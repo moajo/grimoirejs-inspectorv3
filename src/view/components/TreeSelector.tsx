@@ -109,7 +109,7 @@ const TreeSelector: React.SFC<TreeSelectorProps> = (props) => {
 };
 
 export default connect((state: IState): TreeSelectorProps => ({
-    selectedTree: { scriptTag: { scriptTagId: "AAA", scriptTagClass: ["A", "B", "C"] } },//SelectionFilter.getCurrentTree(state),
+    selectedTree: SelectionFilter.getCurrentTree(state),
     frames: state.common.frames,
     open: state.tree.treeSelector.openSelector
 }))(TreeSelector);
