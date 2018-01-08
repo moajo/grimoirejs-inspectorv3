@@ -1,0 +1,40 @@
+.dockContainer
+    height 100%
+    position fixed
+    left 0px
+    right 0px
+    top 0px
+    bottom 0px
+    z-index -100
+    display grid
+    grid-template-areas "LEFT TOP RIGHT" "LEFT OVERLAY RIGHT" " LEFT BOTTOM RIGHT"
+
+.resizablePane
+    width 100%
+    height 100%
+    display grid 
+    grid-template-columns auto 1fr auto
+    grid-template-rows auto 1fr auto
+    grid-template-areas "X1 TOP X2" "LEFT MAIN RIGHT" "X3 BOTTOM X4"
+
+$gripThickness = 2px
+$gripHoverSize = 4px
+
+.horizontalGrip
+    height $gripThickness
+    width 100%
+    background-color gray
+    &:hover
+        height $gripHoverSize
+        cursor row-resize
+
+.verticalGrip
+    width $gripThickness
+    height 100%
+    background-color gray
+    &:hover
+        width $gripHoverSize
+        cursor col-resize
+
+.resizableContent
+    grid-area MAIN

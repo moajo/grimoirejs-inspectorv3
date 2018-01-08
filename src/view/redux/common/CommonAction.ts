@@ -1,7 +1,7 @@
 import { Action } from "redux";
 import CommonActionType from "./CommonActionType";
 import { NodeStructureInfo } from "../../../common/schema";
-import { TreeSelection, NodeSelection, AdjustScreenMode } from "./CommonState";
+import { TreeSelection, NodeSelection, AdjustScreenMode, AdjustScreenRegion } from "./CommonState";
 import { IConnection } from "../../../common/Gateway";
 import { FrameStructure } from "../../../common/constants";
 
@@ -13,7 +13,9 @@ type CommonAction = ConnectToServerAction |
     SelectNodeAction |
     NotifyTreeStructureAction |
     ChangeAdjustScreenModeAction |
-    EpicChangeAdjustScreenModeAction;
+    EpicChangeAdjustScreenModeAction |
+    EpicResizeAdjustScreenAction |
+    ResizeAdjustScreenAction;
 export default CommonAction;
 
 export interface ConnectToServerAction extends Action {
@@ -65,6 +67,18 @@ export interface ChangeAdjustScreenModeAction extends Action {
 }
 
 export interface EpicChangeAdjustScreenModeAction extends Action {
-    type: CommonActionType.EPIC_CHANGE_ADJUST_SCREEN_TYPE,
+    type: CommonActionType.EPIC_CHANGE_ADJUST_SCREEN_MODE,
     mode: AdjustScreenMode
+}
+
+export interface ResizeAdjustScreenAction extends Action {
+    type: CommonActionType.RESIZE_ADJUST_SCEREEN_ACTION,
+    part: keyof AdjustScreenRegion;
+    diff: number;
+}
+
+export interface EpicResizeAdjustScreenAction extends Action {
+    type: CommonActionType.EPIC_RESIZE_ADJUST_SCEREEN_ACTION,
+    part: keyof AdjustScreenRegion;
+    diff: number;
 }

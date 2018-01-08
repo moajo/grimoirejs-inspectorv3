@@ -8,9 +8,12 @@ import {
     NotifyTreeStructureAction,
     PutFrameAction,
     SelectTreeAction,
+    ChangeAdjustScreenModeAction,
+    EpicChangeAdjustScreenModeAction,
+    EpicResizeAdjustScreenAction,
 } from './CommonAction';
 import CommonActionType from './CommonActionType';
-import { TreeSelection } from './CommonState';
+import { TreeSelection, AdjustScreenMode, AdjustScreenRegion } from './CommonState';
 import { FrameStructure } from '../../../common/constants';
 
 export function ConnectToServerActionCreator(): ConnectToServerAction {
@@ -65,4 +68,18 @@ export function NotifyAttributeChangeActionCreator(nodeID: string, componentID: 
         oldValue,
         newValue,
     }
+}
+
+export function changeAdjustScreenMode(mode: AdjustScreenMode): EpicChangeAdjustScreenModeAction {
+    return {
+        type: CommonActionType.EPIC_CHANGE_ADJUST_SCREEN_MODE,
+        mode
+    };
+}
+
+export function resizeAdjustScreen(part: keyof AdjustScreenRegion, diff: number): EpicResizeAdjustScreenAction {
+    return {
+        type: CommonActionType.EPIC_RESIZE_ADJUST_SCEREEN_ACTION,
+        part, diff
+    };
 }

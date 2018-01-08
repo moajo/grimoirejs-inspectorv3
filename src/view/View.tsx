@@ -7,21 +7,22 @@ import { Header } from './Header';
 import { Provider } from "react-redux";
 import Store from "./redux/Store";
 import { ContextNotFound } from './components/ContextNotFound';
-import { ConnectToServerActionCreator } from './redux/common/CommonActionCreator';
+import { ConnectToServerActionCreator, changeAdjustScreenMode } from './redux/common/CommonActionCreator';
 import TreeSelector from './components/TreeSelector';
+import { AdjustScreenMode } from './redux/common/CommonState';
+import Dock from './Dock';
 
 
 export function createView() {
   ReactDOM.render(
     <Provider store={Store}>
-      <div style={{ width: "300px" }}>
-        <TreeSelector />
-      </div>
+      <Dock />
     </Provider>
     ,
     document.getElementById('gr-inspector')
     , () => {
       Store.dispatch(ConnectToServerActionCreator());
+      Store.dispatch(changeAdjustScreenMode(AdjustScreenMode.BodyShrink));
     }
   );
 }
