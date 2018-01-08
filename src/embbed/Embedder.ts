@@ -3,5 +3,5 @@ export default function embed(url: string) {
     scriptTag.setAttribute("type", "text/javascript");
     scriptTag.setAttribute("x-injectedBy", "Grimoire.js inspector v3");
     scriptTag.setAttribute("src", url);
-    document.body.appendChild(scriptTag);
+    document.head.appendChild(scriptTag);
 }

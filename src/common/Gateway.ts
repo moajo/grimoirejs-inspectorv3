@@ -26,7 +26,7 @@ function pack<T>(senderGatewayId: string, channel: IChannelId<T>, payload: T, re
 
 export interface IGateway<T extends IConnection> {
     id: string;
-    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: T) => void): Promise<T>;
+    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: T) => void): Observable<T>;
     connect(connectionName: string): Promise<T>;
 }
 
@@ -43,22 +43,39 @@ export class PortGateway implements IGateway<PortConnection> {
         public id: string
     ) { }
 
-    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: PortConnection) => void): Promise<PortConnection> {
+    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: PortConnection) => void): Observable<PortConnection> {
         const connectionRegExp = typeof connectionName === "string" ? new RegExp(connectionName) : connectionName;
-        return new Promise(resolve => {
-            const waiter = (port: chrome.runtime.Port) => {
-                if (!connectionRegExp.test(port.name)) {
-                    return;
+        return Observable.defer(() => {
+            return new Promise<PortConnection>(resolve => {
+                const waiter = (port: chrome.runtime.Port) => {
+                    if (!connectionRegExp.test(port.name)) {
+                        return;
+                    }
+                    chrome.runtime.onConnect.removeListener(waiter);
+                    const cn = new PortConnection(port.name, this.id, port);
+                    if (connectionInit) {
+                        connectionInit(cn);
+                    }
+                    resolve(cn);
                 }
-                chrome.runtime.onConnect.removeListener(waiter);
-                const cn = new PortConnection(port.name, this.id, port);
-                if (connectionInit) {
-                    connectionInit(cn);
-                }
-                resolve(cn);
-            }
-            chrome.runtime.onConnect.addListener(waiter)
-        });
+                chrome.runtime.onConnect.addListener(waiter)
+            });
+        }).repeat();
+        // return new Promise(resolve => {
+        //     const waiter = (port: chrome.runtime.Port) => {
+        //         const senderTabID = port.sender!.tab!.id!;
+        //         if (!connectionRegExp.test(port.name)) {
+        //             return;
+        //         }
+        //         chrome.runtime.onConnect.removeListener(waiter);
+        //         const cn = new PortConnection(port.name, this.id, port);
+        //         if (connectionInit) {
+        //             connectionInit(cn);
+        //         }
+        //         resolve(cn);
+        //     }
+        //     chrome.runtime.onConnect.addListener(waiter)
+        // });
     }
     async connect(connectionName: string): Promise<PortConnection> {
         const port = chrome.runtime.connect({
@@ -86,43 +103,42 @@ export class TabGateway extends PortGateway {
 
 export class WindowGateway implements IGateway<WindowConnection>{
     constructor(
-        public id: string
+        public id: string,
+        public targetWindow = window,
+        public debug = false,
     ) { }
-    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: WindowConnection) => void): Promise<WindowConnection> {
+    standbyConnection(connectionName: RegExp | string, connectionInit?: (connection: WindowConnection) => void): Observable<WindowConnection> {
         const connectionRegExp = typeof connectionName === "string" ? new RegExp(connectionName) : connectionName;
-        return new Promise(resolve => {
-            const listener = (e: MessageEvent) => {
-                if (e.source != window) {
-                    return;
-                }
-                const req = e.data;
-                if (!req.type || !req.connectionName || !req.gatewayId) {
-                    return;
-                }
-                if (req.type === MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST && connectionRegExp.test(req.connectionName)) {
-                    window.removeEventListener("message", listener);
-                    const cn = new WindowConnection(req.connectionName, this.id, req.gatewayId);
-                    if (connectionInit) {
-                        connectionInit(cn);
+        return Observable.defer(() => {
+            return new Promise<WindowConnection>(resolve => {
+                const listener = (e: MessageEvent) => {
+                    const req = e.data;
+                    if (!req.type || !req.connectionName || !req.gatewayId) {
+                        return;
                     }
-                    window.postMessage({
-                        type: MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE,
-                        connectionName: req.connectionName,
-                        gatewayId: this.id,
-                        replyTo: req.gatewayId
-                    }, "*");
-                    resolve(cn);
+                    if (req.type === MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST && connectionRegExp.test(req.connectionName)) {
+                        window.removeEventListener("message", listener);
+                        const cn = new WindowConnection(req.connectionName, this.id, req.gatewayId, e.source);
+                        if (connectionInit) {
+                            connectionInit(cn);
+                        }
+                        e.source.postMessage({
+                            type: MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE,
+                            connectionName: req.connectionName,
+                            gatewayId: this.id,
+                            replyTo: req.gatewayId
+                        }, "*");
+                        resolve(cn);
+                    }
                 }
-            }
-            window.addEventListener("message", listener);
-        })
+                window.addEventListener("message", listener);
+            })
+        }).repeat();
+
     }
     async connect(connectionName: string): Promise<WindowConnection> {
         const connectionWaiter = new Promise<WindowConnection>(resolve => {
             const listener = (e: MessageEvent) => {
-                if (e.source != window) {
-                    return;
-                }
                 const req = e.data;
                 if (!req.type || !req.connectionName || !req.gatewayId || !req.replyTo) {
                     return;
@@ -133,13 +149,13 @@ export class WindowGateway implements IGateway<WindowConnection>{
                     req.replyTo === this.id
                 ) {
                     window.removeEventListener("message", listener);
-                    const cn = new WindowConnection(connectionName, this.id, req.gatewayId);
+                    const cn = new WindowConnection(connectionName, this.id, req.gatewayId, this.targetWindow);
                     resolve(cn);
                 }
             }
             window.addEventListener("message", listener);
         });
-        window.postMessage({
+        this.targetWindow.postMessage({
             type: MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST,
             connectionName: connectionName,
             gatewayId: this.id
@@ -195,14 +211,11 @@ class WindowConnection implements IConnection {
     constructor(
         public name: string,
         public gatewayId: string,
-        public connectedGatewayId: string
+        public connectedGatewayId: string,
+        public targetWindow = window,
     ) {
         this._subject = new Subject<ConnectionPacket>();
         window.addEventListener("message", (e) => {
-            if (e.source != window) {
-                return;
-            }
-
             const packet = e.data as BroadcastPacket;
             if (
                 !packet.connectionName ||
@@ -226,7 +239,7 @@ class WindowConnection implements IConnection {
             connectionName: this.name,
             connectionPacket: gatewayMessage
         }
-        window.postMessage(broadcastPacket, "*");
+        this.targetWindow.postMessage(broadcastPacket, "*");
     }
     open<T>(channel: IChannelId<T>): Observable<T> {
         return this.listen()
@@ -238,13 +251,17 @@ class WindowConnection implements IConnection {
     }
 }
 
-export function redirect(connection: IConnection, other: IConnection): ISubscription {
+export function redirect(connection: IConnection, other: IConnection, debug = false): ISubscription {
     const s1 = connection.listen().subscribe(packet => {
-        console.log("=>", packet.channel, packet.payload)
+        if (debug) {
+            console.log("=>", packet.channel, packet.payload)
+        }
         other.post(packet.channel, packet.payload);
     });
     const s2 = other.listen().subscribe(packet => {
-        console.log("<=", packet.channel, packet.payload)
+        if (debug) {
+            console.log("<=", packet.channel, packet.payload)
+        }
         connection.post(packet.channel, packet.payload);
     })
     const handler = {

@@ -18,5 +18,17 @@
     ],
     "web_accessible_resources": [
         "dist/embbed.js"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "dist/content_script.js"
+            ],
+            "all_frames": true
+        }
     ]
 }

@@ -5,6 +5,6 @@ import { PortGateway, WindowGateway } from "../common/Gateway";
 
 (async () => {
     createView();
-    const gateway = new WindowGateway("dev");
-    await connectToBackground(gateway, 12345);//dummy tab id
+    // const gateway = new WindowGateway("dev");
+    // await connectToBackground(gateway, 123);//dummy tab id
 })();
