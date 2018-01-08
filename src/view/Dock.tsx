@@ -60,7 +60,7 @@ const Dock: React.SFC<DockProps> = (props) => {
         gridTemplateRows: `${props.region.top}px 1fr ${props.region.bottom}px`
     }} className={styl.dockContainer}>
         <div style={{ gridArea: "LEFT", height: "100%" }}>
-            <ResizablePane resizableEdge="RIGHT" components={[<TreeSelector />]} onGripMove={(x, y) => {
+            <ResizablePane resizableEdge="RIGHT" components={[<TreeSelector key="tree-selector" />]} onGripMove={(x, y) => {
                 props.dispatch!(resizeAdjustScreen("left", x))
             }} />
         </div>

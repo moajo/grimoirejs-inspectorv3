@@ -14,6 +14,7 @@ import { ICommonState } from "../CommonState";
 export function SelectTreeEpic(action: ActionsObservable<SelectTreeAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
     return action.ofType(CommonActionType.SELECT_TREE)
         .map(async (action) => {
+            debugger
             const p = new Promise<NodeStructureInfo>(resolve => {
                 store.getState().common.connection!.open(CHANNEL_NOTIFY_TREE_STRUCTURE).subscribe(a => {
                     resolve(a)

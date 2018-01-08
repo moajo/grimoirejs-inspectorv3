@@ -11,7 +11,7 @@ export default class SelectionFilter {
         if (!state.common.treeSelection) {
             return undefined;
         } else {
-            return state.common.frames[state.common.treeSelection.frameId];
+            return state.common.frames[state.common.treeSelection.frameUUID];
         }
     }
 

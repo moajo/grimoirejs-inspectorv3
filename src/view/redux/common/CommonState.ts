@@ -2,7 +2,7 @@ import { IConnection } from "../../../common/Gateway";
 import { FrameStructure } from "../../../common/constants";
 
 export interface TreeSelection {
-    frameId: string;
+    frameUUID: string;
     rootNodeId: string;
 }
 

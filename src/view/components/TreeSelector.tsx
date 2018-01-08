@@ -9,6 +9,8 @@ import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
 import { switchTreeSelector } from '../redux/tree/selector/Selector';
 import { FrameStructure } from '../../common/constants';
+import { window } from 'rxjs/operators/window';
+import { SelectTreeActionCreator } from '../redux/common/CommonActionCreator';
 
 interface IdClassLabelProps {
     id?: string;
@@ -32,14 +34,21 @@ const IdClassLabel: React.SFC<IdClassLabelProps> = (props) => {
     }
     return (<span><span className={props.idClass}>{id}</span><span className={props.classNameClass}>{className}</span></span>);
 };
-interface TreeElementProps {
+interface TreeElementProps extends DispatchProp<TreeElementProps> {
     tree: TreeInfo;
+    frameUUID: string;
 }
 
-const TreeElement: React.SFC<TreeElementProps> = (props) => {
+const TreeElementOriginal: React.SFC<TreeElementProps> = (props) => {
     const id = props.tree.scriptTag ? props.tree.scriptTag.scriptTagId : undefined;
     const className = props.tree.scriptTag ? props.tree.scriptTag.scriptTagClass : undefined;
-    return (<div className={styl.treeElementContainer}>
+    const selectTree = () => {
+        props.dispatch!(SelectTreeActionCreator({
+            rootNodeId: props.tree.rootNodeId,
+            frameUUID: props.frameUUID
+        }));
+    }
+    return (<div className={styl.treeElementContainer} onMouseDown={selectTree}>
         <p>
             {<IdClassLabel id={id} classNames={className} idClass={styl.idLabel} classNameClass={styl.classLabel} emptyLabel={`No NAME(${props.tree.rootNodeId})`} />}
         </p>
@@ -47,15 +56,26 @@ const TreeElement: React.SFC<TreeElementProps> = (props) => {
     </div>);
 };
 
+const TreeElement = connect()(TreeElementOriginal);
+
 interface FrameElementProps {
     frame: FrameStructure;
 }
+
+const hasChildContext = (n: FrameStructure): boolean => {
+    return !_.isEmpty(n.trees) || !_.isEmpty(_.find(n.children, v => hasChildContext(v)));
+};
 
 const FrameElement: React.SFC<FrameElementProps> = (props) => {
     return (<div className={styl.frameElementContainer}>
         <p className={styl.iconContainer}><i className="far fa-window-maximize"></i></p>
         <p className={styl.urlContainer}>{props.frame.url}</p>
-        <div className={styl.canvasListContainer}>{_.map(props.frame.trees, v => (<TreeElement tree={v} />))}</div>
+        <div className={styl.canvasListContainer}>
+            {_.map(props.frame.trees, v => (<TreeElement key={v.rootNodeId} tree={v} frameUUID={props.frame.uuid} />))}
+        </div>
+        <div className={styl.framesListContainer}>
+            {_.flatMap(_.filter(props.frame.children, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value.uuid} frame={value!} />))}
+        </div>
     </div>)
 };
 
@@ -63,7 +83,7 @@ const FrameElement: React.SFC<FrameElementProps> = (props) => {
 const TreeSelectorExpander: React.SFC<TreeSelectorProps> = (props) => {
     return (
         <div>
-            {_.flatMap(_.filter(props.frames, (v) => v && !_.isEmpty(v.trees)), (value, key) => (<FrameElement frame={value!} />))}
+            {_.flatMap(_.filter(props.frames, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value!.uuid} frame={value!} />))}
         </div>
     );
 };
@@ -98,6 +118,13 @@ const TreeSelector: React.SFC<TreeSelectorProps> = (props) => {
             No context found
         </p >);
     const toggleOpen = () => {
+        if (!props.open) {
+            const closeByWindow = () => {
+                props.dispatch!(switchTreeSelector(false));
+                document.removeEventListener("mousedown", closeByWindow);
+            }
+            document.addEventListener("mousedown", closeByWindow);
+        }
         props.dispatch!(switchTreeSelector(!props.open));
     };
     return (<div className={styl.indicatorContainer} onClick={toggleOpen}>
