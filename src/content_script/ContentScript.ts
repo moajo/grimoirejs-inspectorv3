@@ -17,6 +17,7 @@ import {
     CONNECTION_CS_TO_IFRAME,
     FrameStructure,
     CHANNEL_NOTIFY_ROOT_NODES_RESPONSE,
+    CHANNEL_NOTIFY_FRAME_CLOSE,
 } from '../common/constants';
 import { IConnection, IGateway, redirect, WindowGateway } from '../common/Gateway';
 import { isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
@@ -56,37 +57,31 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     subscribeEmbConnection(embConnectionSubject, frameStructureSubject);
 
     // on update parent connection, it subscribe frame structure.
-    parentConnectionSubject.subscribe(connection => {
-        if (connection) {
-            const subscription = frameStructureSubject.subscribe(info => {
-                if (!isIframe) {
-                    connection.post(CHANNEL_PUT_FRAMES, info);
-                } else {
-                    connection.post(CHANNEL_NOTIFY_FRAME_STRUCTURE, info);
-                }
-            });
-            subscriptionSubject.next(subscription);
-        } else {
-            subscriptionSubject.next(undefined);
-        }
-    })
+    subscribeParentConnection(parentConnectionSubject, frameStructureSubject, isIframe, subscriptionSubject);
 
     //wait for child frame connection
     const childFrameConnections = {} as { [key: string]: IConnection };
     const iframeGateway = new WaitingEstablishedGateway(new WindowGateway("cs:iframe"));
-    const childFrameConnectionObservable =
-        iframeGateway.standbyConnection(CONNECTION_CS_TO_IFRAME).shareReplay().subscribe(cn => {
-            // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe connection come in`)
-            cn.open(CHANNEL_NOTIFY_FRAME_STRUCTURE).subscribe(structure => {
-                // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
-                const newValue = {
-                    ...frameStructureSubject.getValue(),
-                }
-                newValue.children[structure.uuid] = structure;
-                frameStructureSubject.next(newValue);
-                childFrameConnections[structure.uuid] = cn;
-            });
+    iframeGateway.standbyConnection(CONNECTION_CS_TO_IFRAME).shareReplay().subscribe(cn => {
+        // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe connection come in`)
+        cn.open(CHANNEL_NOTIFY_FRAME_STRUCTURE).subscribe(structure => {
+            // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
+            const newValue = {
+                ...frameStructureSubject.getValue(),
+            }
+            newValue.children[structure.uuid] = structure;
+            childFrameConnections[structure.uuid] = cn;
+            frameStructureSubject.next(newValue);
         });
+        cn.open(CHANNEL_NOTIFY_FRAME_CLOSE).subscribe(id => {
+            const newValue = {
+                ...frameStructureSubject.getValue(),
+            }
+            delete newValue.children[id];
+            delete childFrameConnections[id];
+            frameStructureSubject.next(newValue);
+        });
+    });
 
 
     // wait gr signal and script embeddeing.
@@ -96,17 +91,16 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     });
 
     // frameIDがくる。そのフレームとコネクトする。
-    const reconnectFrameRequestStream = new BehaviorSubject<string>(currentFrameUUID);
+    const selectFrameRequestStream = new BehaviorSubject<string>(currentFrameUUID);
 
     let embParentRedirection = new BehaviorSubject<ISubscription | undefined>(undefined);
-    embParentRedirection.zip(embParentRedirection.skip(1)).map(tuple => tuple[0]).filter(isNotNullOrUndefined).subscribe(prev => {
-        prev.unsubscribe();
-    })
+    autoUnsubscribe(embParentRedirection);
 
-    Observable.combineLatest(reconnectFrameRequestStream, embConnectionSubject, parentConnectionSubject.filter(isNotNullOrUndefined)).subscribe(triple => {
+    // 変化するのはembConnectionSubjectとselectFrameRequestStream
+    Observable.combineLatest(selectFrameRequestStream, embConnectionSubject, parentConnectionSubject.filter(isNotNullOrUndefined)).subscribe(triple => {
         const [frameUUID, embConnection, parentConnection] = triple;
         if (currentFrameUUID === frameUUID) {
-            if (!embConnection) {
+            if (!embConnection) { // not found gr context yet
                 parentConnection.post(CHANNEL_FRAME_CONNECT_RESPONSE, false);
             } else {
                 embParentRedirection.next(redirect(embConnection, parentConnection, true));
@@ -120,7 +114,7 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     });
 
     const init = (cn: IConnection) => {
-        cn.open(CHANNEL_SELECT_TREE).map(treeSelection => treeSelection.frameUUID).subscribe(reconnectFrameRequestStream);
+        cn.open(CHANNEL_SELECT_TREE).map(treeSelection => treeSelection.frameUUID).subscribe(selectFrameRequestStream);
     }
 
     if (isIframe) {
@@ -130,6 +124,9 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
         parentConnection.post(CHANNEL_NOTIFY_FRAME_STRUCTURE, frameStructureSubject.getValue())
 
         // TODO window.onunload で親に通知
+        window.addEventListener("unload", ev => {
+            parentConnection.post(CHANNEL_NOTIFY_FRAME_CLOSE, currentFrameUUID);
+        })
     } else {
         const parentConnection = await (new WaitingEstablishedGateway(background_gateway, init)).connect(CONNECTION_CS_TO_BG);
 
@@ -187,7 +184,7 @@ function findFrame(structure: FrameStructure, uuid: string) {
 }
 
 // unsubscribe old subscription
-function autoUnsubscribe(subscriptionObservable: BehaviorSubject<undefined | Subscription>) {
+function autoUnsubscribe(subscriptionObservable: Observable<undefined | ISubscription>) {
     subscriptionObservable.zip(subscriptionObservable.skip(1)).map(tuple => tuple[0]).filter(isNotNullOrUndefined).subscribe(prev => {
         prev.unsubscribe();
     });
@@ -206,5 +203,28 @@ function subscribeEmbConnection(
             frameStructureSubject.next(newValue);
         })
     })
+}
 
+
+// on update parent connection, it subscribe frame structure.
+function subscribeParentConnection(
+    parentConnections: Observable<IConnection | undefined>,
+    frameStructureSubject: BehaviorSubject<FrameStructure>,
+    isIframe: boolean,
+    subscriptionSubject: Observer<Subscription | undefined>,
+) {
+    parentConnections.subscribe(connection => {
+        if (connection) {
+            const subscription = frameStructureSubject.subscribe(info => {
+                if (!isIframe) {
+                    connection.post(CHANNEL_PUT_FRAMES, info);
+                } else {
+                    connection.post(CHANNEL_NOTIFY_FRAME_STRUCTURE, info);
+                }
+            });
+            subscriptionSubject.next(subscription);
+        } else {
+            subscriptionSubject.next(undefined);
+        }
+    })
 }

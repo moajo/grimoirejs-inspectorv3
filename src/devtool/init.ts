@@ -1,5 +1,5 @@
 
-chrome.devtools.panels.create("My Panel",
+chrome.devtools.panels.create("Grimoire",
     "../resource/small-logo.png",
     "../html/devtool_index.html",
     function (panel) {
