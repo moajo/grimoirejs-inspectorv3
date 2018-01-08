@@ -63,7 +63,7 @@ const FrameElement: React.SFC<FrameElementProps> = (props) => {
 const TreeSelectorExpander: React.SFC<TreeSelectorProps> = (props) => {
     return (
         <div>
-            {_.flatMap(props.frames, (value, key) => (<FrameElement frame={value!} />))}
+            {_.flatMap(_.filter(props.frames, (v) => v && !_.isEmpty(v.trees)), (value, key) => (<FrameElement frame={value!} />))}
         </div>
     );
 };
