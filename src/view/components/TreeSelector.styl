@@ -12,6 +12,8 @@
         cursor pointer
     p
         margin 0px
+        white-space nowrap
+        text-overflow ellipsis
 .spinnerContainer
     grid-area SPINNER
 .labelContainer
@@ -22,6 +24,7 @@
 
 .indicatorLabelContainer
     grid-area LABEL
+    background-color white
     display grid
     grid-template-columns 45px 1fr
     grid-template-areas "ICON CONTEXTLABEL"
@@ -47,9 +50,12 @@
 .frameElementContainer
     border 1px solid gray
     display grid
-    grid-template-columns 32px 1fr
-    grid-template-rows auto auto
-    grid-template-areas "ICON URL" "A1 CANVASES"
+    grid-template-columns 32px calc(100% - 32px)
+    grid-template-rows auto auto auto
+    grid-template-areas "ICON URL" "A1 CANVASES" "A2 FRAMES"
+    background-color white
+    &:hover
+        background-color #CCAAFF
 
 .iconContainer
     grid-area ICON
@@ -57,6 +63,10 @@
     grid-area URL
 .canvasListContainer
     grid-area CANVASES
+    &:hover
+        background-color #AA88CC
+.framesListContainer
+    grid-area FRAMES
 .treeElementContainer
     border 1px solid gray
     margin 0px -1px -1px 0px

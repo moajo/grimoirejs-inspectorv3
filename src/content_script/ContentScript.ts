@@ -119,7 +119,7 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     });
 
     const init = (cn: IConnection) => {
-        cn.open(CHANNEL_SELECT_TREE).map(treeSelection => treeSelection.frameId).subscribe(selectFrameRequestStream);
+        cn.open(CHANNEL_SELECT_TREE).map(treeSelection => treeSelection.frameUUID).subscribe(selectFrameRequestStream);
     }
 
     if (isIframe) {
