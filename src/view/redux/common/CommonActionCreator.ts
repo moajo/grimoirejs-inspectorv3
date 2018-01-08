@@ -36,7 +36,6 @@ export function GetFramesActionCreator(): GetFramesAction {
 }
 
 export function PutFrameActionCreator(frameId: string, frameInfo?: FrameStructure): PutFrameAction {
-    console.log("aaaaaa@@@@@@@@")
     return {
         type: CommonActionType.PUT_FRAME,
         frameId,

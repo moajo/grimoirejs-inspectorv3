@@ -21,7 +21,9 @@ export const CHANNEL_CONNECT_TO_FRAME: IChannelId<string> = "CHANNEL_CONNECT_TO_
 // response with existing gr context.
 export const CHANNEL_FRAME_CONNECT_RESPONSE: IChannelId<boolean> = "CHANNEL_FRAME_CONNECT_RESPONSE";
 
-export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "channel_notify_root_node";
+export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "CHANNEL_NOTIFY_ROOT_NODES";
+export const CHANNEL_NOTIFY_ROOT_NODES_RESPONSE: IChannelId<FrameStructure["trees"]> = "CHANNEL_NOTIFY_ROOT_NODES_RESPONSE";
+
 export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
 export const CHANNEL_PUT_FRAMES = "CHANNEL_PUT_FRAMES" as IChannelId<FrameStructure>;
 
