@@ -37,26 +37,6 @@ async function main() {
     
     const gateway = new WindowGateway("page:cs");
 
-    // const wrapper = new WaitingEstablishedGateway(gateway, connection => {
-    //     connection.open(CHANNEL_NOTIFY_ROOT_NODES).subscribe(async () => {
-    //         const currentTrees = await treesSubject.first().toPromise();
-    //         connection.post(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE, currentTrees);
-    //     });
-    //     // connection.open(CHANNEL_PUT_FRAMES).subscribe(a => {
-    //     //     console.log(`[emb] CHANNEL_PUT_FRAMES: frame is `,frame)
-    //     //     connection.post(CHANNEL_PUT_FRAMES, frame)
-    //     // });
-    //     connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
-    //         const rootNode = gr.rootNodes[req.rootNodeId];
-    //         const nodeStructure = convertToNodeStructureInfo(rootNode);
-    //         connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
-    //     })
-
-    //     connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector => {
-    //         nodeSelector.frameID
-    //     })
-    // })
-
     const connection = (await gateway.connect(CONNECTION_CS_TO_EMB)).startWith(connection=>{
         connection.open(CHANNEL_NOTIFY_ROOT_NODES).subscribe(async () => {
             const currentTrees = await treesSubject.first().toPromise();
@@ -77,8 +57,6 @@ async function main() {
         });
         return connection;
     });
-    
-    // connection.start();
 
     treesSubject.subscribe(a => {
         connection.post(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE, a);

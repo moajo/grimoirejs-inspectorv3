@@ -1,5 +1,6 @@
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
+import { IConnection, redirect } from '../common/Connection';
 import {
     CHANNEL_NOTIFY_TAB_ID,
     CHANNEL_TAB_CONNECTION_ESTABLISHED,
@@ -7,7 +8,6 @@ import {
     CONNECTION_CS_TO_BG,
 } from '../common/constants';
 import { IGateway } from '../common/Gateway';
-import { IConnection, redirect } from '../common/Connection';
 
 type TabConnectionWaiting = {
     tabID: number,
@@ -26,7 +26,7 @@ export async function connectionConnector<
 
     const csConnections = csGateway.waitingConnection(CONNECTION_CS_TO_BG)
         .do(cn => {
-            cn.connection.toObservable().subscribe(a => {
+            cn.connection.subscribe(a => {
                 console.log(`[cs=>bg]`, a.channel, a.payload, a.senderGatewayId)
             });
         })

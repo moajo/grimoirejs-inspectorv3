@@ -1,4 +1,4 @@
-import { IChannelId } from "./Channel";
+import { IChannelId, Channel } from "./Channel";
 import { Observable } from "rxjs/Observable";
 import { ConnectionPacket } from "./Gateway";
 import { DISCONNECT_SIGNAL } from "./constants";
@@ -20,8 +20,7 @@ export interface IConnection extends NextObserver<ConnectionPacket>, Subscribabl
     gatewayId: string;
     name: string;
     post<T>(channel: IChannelId<T>, message: T): void;
-    open<T>(channel: IChannelId<T>): Observable<T>;
-    // subscribe all raw packets
+    open<T>(channel: IChannelId<T>): Channel<T>;
     start(): void;
     disconnect(): void;
     toObservable(): Observable<ConnectionPacket>;
@@ -35,10 +34,8 @@ abstract class ConnectionBase implements IConnection {
 
     abstract post<T>(channel: IChannelId<T>, message: T): void;
 
-    open<T>(channel: IChannelId<T>): Observable<T> {
-        return this.toObservable()
-            .filter(packet => packet.channel == channel)
-            .map(packet => packet.payload);
+    open<T>(channel: IChannelId<T>): Channel<T> {
+        return new Channel(this,channel);
     }
     abstract start(): void;
 
@@ -144,18 +141,22 @@ export class WindowConnection extends ConnectionBase {
 }
 
 export function redirect(connection: IConnection, other: IConnection, debug = false): ISubscription {
-    const s1 = connection.toObservable().subscribe(packet => {
-        if (debug) {
-            console.log("=>", packet.channel, packet.payload)
-        }
-        other.post(packet.channel, packet.payload);
-    });
-    const s2 = other.toObservable().subscribe(packet => {
-        if (debug) {
-            console.log("<=", packet.channel, packet.payload)
-        }
-        connection.post(packet.channel, packet.payload);
-    })
+    const s1 = connection.toObservable()
+        .do(packet => {
+            if (debug) {
+                console.log("=>", packet.channel, packet.payload)
+            }
+        })
+        .subscribe(other);
+
+    const s2 = other.toObservable()
+        .do(packet => {
+            if (debug) {
+                console.log("=>", packet.channel, packet.payload)
+            }
+        })
+        .subscribe(connection);
+
     const handler = {
         closed: false,
         unsubscribe: () => {

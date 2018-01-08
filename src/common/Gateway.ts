@@ -16,8 +16,6 @@ export type ConnectionPacket<T=any> = {
     payload: T
 }
 
-
-
 export class ConnectionPreparation<T extends IConnection>{
     constructor(
         public connection: T,
@@ -35,8 +33,6 @@ export interface IGateway<T extends IConnection> {
     waitingConnection(connectionName: RegExp | string): Observable<ConnectionPreparation<T>>;
     connect(connectionName: string): Promise<ConnectionPreparation<T>>;
 }
-
-
 
 export class PortGateway implements IGateway<PortConnection> {
     constructor(
@@ -59,6 +55,7 @@ export class PortGateway implements IGateway<PortConnection> {
             });
         }).repeat();
     }
+    
     async connect(connectionName: string): Promise<ConnectionPreparation<PortConnection>> {
         const port = chrome.runtime.connect({
             name: connectionName
@@ -74,6 +71,7 @@ export class WindowGateway implements IGateway<WindowConnection>{
         public targetWindow = window,
         public debug = false,
     ) { }
+
     waitingConnection(connectionName: RegExp | string): Observable<ConnectionPreparation<WindowConnection>> {
         const connectionFilter = typeof connectionName === "string" ? (name: string) => name === connectionName : connectionName.test;
         return Observable.defer(() => {
@@ -96,8 +94,8 @@ export class WindowGateway implements IGateway<WindowConnection>{
                 window.addEventListener("message", listener);
             })
         }).repeat();
-
     }
+
     async connect(connectionName: string): Promise<ConnectionPreparation<WindowConnection>> {
         var channel = new MessageChannel();
         this.targetWindow.postMessage({
@@ -109,6 +107,5 @@ export class WindowGateway implements IGateway<WindowConnection>{
 
         return await new ConnectionPreparation(cn);
     }
-
 }
 

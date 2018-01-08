@@ -8,12 +8,11 @@ export async function connectToBackground<T extends IConnection>(gateway: IGatew
   console.log("[dev] start")
 
   const connection = (await gateway.connect(CONNECTION_BG_TO_DEV)).startWith(cn => {
-    cn.toObservable().subscribe(a => {
+    cn.subscribe(a => {
       console.log(`[dev]recieve: `, a.channel, a.payload, a.senderGatewayId)
     })
     return cn
   });
-
 
   await postAndWaitReply(connection, CHANNEL_NOTIFY_TAB_ID, tabId, CHANNEL_TAB_CONNECTION_ESTABLISHED);
 

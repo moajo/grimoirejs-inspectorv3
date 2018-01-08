@@ -11,7 +11,6 @@ export function notifyRootNodes(connection: IConnection, gr: GrimoireInterface) 
         const rootNode = a.rootNode;
         const ownerScriptTag = a.ownerScriptTag;
     })
-
 }
 
 function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
