@@ -7,9 +7,10 @@ import {
     CHANNEL_SELECT_NODE,
     CHANNEL_SELECT_TREE,
     CONNECTION_CS_TO_EMB,
+    FrameStructure,
 } from '../common/constants';
 import { WindowGateway } from '../common/Gateway';
-import { convertToNodeStructureInfo, convertToScriptTagInfo, FrameInfo } from '../common/schema';
+import { convertToNodeStructureInfo, convertToScriptTagInfo } from '../common/schema';
 import WaitingEstablishedGateway from '../common/WrapperGateway';
 
 async function main() {
@@ -19,10 +20,10 @@ async function main() {
         // extract gr infomation.
         const gr = (window as any).GrimoireJS as GrimoireInterface;
         const frame = { // TODO iframe対応
-            frameId: "main",
-            frameURL: location.href,
-            trees: {}
-        } as FrameInfo;
+            uuid: "main",
+            url: location.href,
+            trees: {},
+        } as FrameStructure;
 
         for (const key in gr.rootNodes) {
             const rootNode = gr.rootNodes[key];
@@ -33,7 +34,7 @@ async function main() {
                 rootNodeId: rootNode.id,
             }
         }
-        const frames: { [key: string]: FrameInfo } = { "main": frame }
+        const frames: { [key: string]: FrameStructure } = { "main": frame }
 
 
 

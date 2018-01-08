@@ -1,5 +1,5 @@
 import { IChannelId } from "./Channel";
-import { FrameInfo, NodeStructureInfo } from "./schema";
+import { NodeStructureInfo, TreeInfo } from "./schema";
 import { TreeSelection } from "../view/redux/common/CommonState";
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
@@ -23,7 +23,7 @@ export const CHANNEL_FRAME_CONNECT_RESPONSE: IChannelId<boolean> = "CHANNEL_FRAM
 
 export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<string> = "channel_notify_root_node";
 export const CHANNEL_NOTIFY_PORT_ID = "notify_port_id" as IChannelId<string>;
-export const CHANNEL_PUT_FRAMES = "CHANNEL_PUT_FRAMES" as IChannelId<FrameInfo>;
+export const CHANNEL_PUT_FRAMES = "CHANNEL_PUT_FRAMES" as IChannelId<FrameStructure>;
 
 export const CHANNEL_SELECT_TREE = "CHANNEL_SELECT_TREE" as IChannelId<TreeSelection>;
 export const CHANNEL_NOTIFY_TREE_STRUCTURE = "CHANNEL_NOTIFY_TREE_STRUCTURE" as IChannelId<NodeStructureInfo>;
@@ -54,4 +54,6 @@ export type FrameStructure = {
     children: {
         [key: string]: FrameStructure,
     },
+    trees: { [key: string]: TreeInfo },
+    plugins: string[],
 }

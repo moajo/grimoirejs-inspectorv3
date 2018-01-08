@@ -1,5 +1,5 @@
 import { IConnection } from '../../../common/Gateway';
-import { FrameInfo, NodeStructureInfo } from '../../../common/schema';
+import { NodeStructureInfo } from '../../../common/schema';
 import {
     ConnectionEstablishedAction,
     ConnectToServerAction,
@@ -11,6 +11,7 @@ import {
 } from './CommonAction';
 import CommonActionType from './CommonActionType';
 import { TreeSelection } from './CommonState';
+import { FrameStructure } from '../../../common/constants';
 
 export function ConnectToServerActionCreator(): ConnectToServerAction {
     return {
@@ -31,7 +32,7 @@ export function GetFramesActionCreator(): GetFramesAction {
     }
 }
 
-export function PutFrameActionCreator(frameId: string, frameInfo?: FrameInfo): PutFrameAction {
+export function PutFrameActionCreator(frameId: string, frameInfo?: FrameStructure): PutFrameAction {
     return {
         type: CommonActionType.PUT_FRAME,
         frameId,

@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { TreeSelection } from '../redux/common/CommonState';
 import styl from "./TreeSelector.styl";
-import { FrameInfo, TreeInfo } from '../../common/schema';
+import { TreeInfo } from '../../common/schema';
 import _ from "lodash";
 import cx from "classnames";
 import SelectionFilter from '../SelectionFilter';
 import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
 import { switchTreeSelector } from '../redux/tree/selector/Selector';
+import { FrameStructure } from '../../common/constants';
 
 interface IdClassLabelProps {
     id?: string;
@@ -47,13 +48,13 @@ const TreeElement: React.SFC<TreeElementProps> = (props) => {
 };
 
 interface FrameElementProps {
-    frame: FrameInfo;
+    frame: FrameStructure;
 }
 
 const FrameElement: React.SFC<FrameElementProps> = (props) => {
     return (<div className={styl.frameElementContainer}>
         <p className={styl.iconContainer}><i className="far fa-window-maximize"></i></p>
-        <p className={styl.urlContainer}>{props.frame.frameURL}</p>
+        <p className={styl.urlContainer}>{props.frame.url}</p>
         <div className={styl.canvasListContainer}>{_.map(props.frame.trees, v => (<TreeElement tree={v} />))}</div>
     </div>)
 };
@@ -86,7 +87,7 @@ const IndicatorLabel: React.SFC<IndicatorLabelProps> = (props) => {
 
 interface TreeSelectorProps extends DispatchProp<TreeSelectorProps> {
     selectedTree?: TreeInfo;
-    frames: { [key: string]: FrameInfo | undefined; }
+    frames: { [key: string]: FrameStructure | undefined; }
     open: boolean;
 }
 

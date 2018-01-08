@@ -9,7 +9,6 @@ import CommonActionType from "../CommonActionType";
 import { CHANNEL_PUT_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../common/constants";
 import { PutFrameActionCreator, ConnectionEstablishedActionCreator } from "../CommonActionCreator";
 import { ActionsObservable } from "redux-observable";
-import { FrameInfo } from "../../../../common/schema";
 import { Dependency } from "../CommonDependency";
 
 

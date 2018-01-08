@@ -1,12 +1,13 @@
 import { IState } from "./redux/State";
-import { FrameInfo, GomlNodeInfo, TreeInfo } from "../common/schema";
+import { GomlNodeInfo, TreeInfo } from "../common/schema";
+import { FrameStructure } from "../common/constants";
 
 export default class SelectionFilter {
     /**
      * Obtain current frame from state
      * @param state 
      */
-    public static getCurrentFrame(state: IState): FrameInfo | undefined {
+    public static getCurrentFrame(state: IState): FrameStructure | undefined {
         if (!state.common.treeSelection) {
             return undefined;
         } else {

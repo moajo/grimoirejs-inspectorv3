@@ -1,8 +1,9 @@
 import { Action } from "redux";
 import CommonActionType from "./CommonActionType";
-import { FrameInfo, NodeStructureInfo } from "../../../common/schema";
+import { NodeStructureInfo } from "../../../common/schema";
 import { TreeSelection, NodeSelection } from "./CommonState";
 import { IConnection } from "../../../common/Gateway";
+import { FrameStructure } from "../../../common/constants";
 
 type CommonAction = ConnectToServerAction |
     ConnectionEstablishedAction |
@@ -28,7 +29,7 @@ export interface GetFramesAction extends Action {
 export interface PutFrameAction extends Action {
     type: CommonActionType.PUT_FRAME;
     frameId: string;
-    frameInfo?: FrameInfo;
+    frameInfo?: FrameStructure;
 }
 
 export interface SelectTreeAction extends Action {

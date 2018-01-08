@@ -18,7 +18,7 @@ import {
     FrameStructure,
 } from '../common/constants';
 import { IConnection, IGateway, redirect, WindowGateway } from '../common/Gateway';
-import { convertToFrameStructureToFrameInfos, isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
+import { isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
 import WaitingEstablishedGateway from '../common/WrapperGateway';
 import embed from '../embbed/Embedder';
 import { Subject } from 'rxjs/Subject';
@@ -41,6 +41,8 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
         uuid: currentFrameUUID,
         url: location.href,
         children: {},
+        trees: {},
+        plugins: []
     };
     const frameStructureSubject = new BehaviorSubject(frameStructure);
     const parentConnectionSubject = new BehaviorSubject<undefined | IConnection>(undefined);
@@ -54,10 +56,8 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     // on update parent connection, it subscribe frame structure.
     parentConnectionSubject.subscribe(connection => {
         if (connection) {
-            const subscription = frameStructureSubject.subscribe(a => {
-                convertToFrameStructureToFrameInfos(a).forEach(info => {
-                    connection.post(CHANNEL_PUT_FRAMES, info);
-                })
+            const subscription = frameStructureSubject.subscribe(info => {
+                connection.post(CHANNEL_PUT_FRAMES, info);
             });
             subscriptionSubject.next(subscription);
         } else {
@@ -123,7 +123,7 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
         // TODO window.onunload で親に通知
     } else {
         const parentConnection = await (new WaitingEstablishedGateway(background_gateway, init)).connect(CONNECTION_CS_TO_BG);
-        
+
         await postAndWaitReply(parentConnection, CHANNEL_NOTIFY_TAB_ID, tabId, CHANNEL_TAB_CONNECTION_ESTABLISHED);
         parentConnectionSubject.next(parentConnection);
     }

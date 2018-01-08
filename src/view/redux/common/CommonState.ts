@@ -1,5 +1,5 @@
-import { FrameInfo } from "../../../common/schema";
 import { IConnection } from "../../../common/Gateway";
+import { FrameStructure } from "../../../common/constants";
 
 export interface TreeSelection {
     frameId: string;
@@ -12,7 +12,7 @@ export interface NodeSelection {
 }
 
 export interface ICommonState {
-    frames: { [frameId: string]: FrameInfo | undefined };
+    frames: { [frameId: string]: FrameStructure | undefined };
     treeSelection?: TreeSelection;
     nodeSelection?: NodeSelection;
     connection?: IConnection

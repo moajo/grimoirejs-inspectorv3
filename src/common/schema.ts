@@ -4,13 +4,6 @@ import Component from "grimoirejs/ref/Core/Component";
 import Attribute from "grimoirejs/ref/Core/Attribute";
 import * as _ from "lodash";
 
-export interface FrameInfo {
-    frameId: string;
-    frameURL: string;
-    trees: { [key: string]: TreeInfo };
-    plugins: string[];
-}
-
 export interface ScriptTagInfo {
     scriptTagId?: string;
     scriptTagClass?: string[];
