@@ -1,9 +1,9 @@
+import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-import { Subject } from "rxjs";
-import { MergeScanSubscriber } from 'rxjs/operators/mergeScan';
-import { IChannelId } from './Channel';
 import { ISubscription } from 'rxjs/Subscription';
-import { CHANNEL_CONNECTION_ESTABLISHED, MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST, MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE } from './constants';
+
+import { IChannelId } from './Channel';
+import { MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST, MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE } from './constants';
 
 type ConnectionPacket<T=any> = {
     senderGatewayId: string,
@@ -61,21 +61,6 @@ export class PortGateway implements IGateway<PortConnection> {
                 chrome.runtime.onConnect.addListener(waiter)
             });
         }).repeat();
-        // return new Promise(resolve => {
-        //     const waiter = (port: chrome.runtime.Port) => {
-        //         const senderTabID = port.sender!.tab!.id!;
-        //         if (!connectionRegExp.test(port.name)) {
-        //             return;
-        //         }
-        //         chrome.runtime.onConnect.removeListener(waiter);
-        //         const cn = new PortConnection(port.name, this.id, port);
-        //         if (connectionInit) {
-        //             connectionInit(cn);
-        //         }
-        //         resolve(cn);
-        //     }
-        //     chrome.runtime.onConnect.addListener(waiter)
-        // });
     }
     async connect(connectionName: string): Promise<PortConnection> {
         const port = chrome.runtime.connect({

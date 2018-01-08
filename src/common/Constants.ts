@@ -1,6 +1,6 @@
-import { IChannelId } from "./Channel";
-import { NodeStructureInfo, TreeInfo } from "./schema";
-import { TreeSelection } from "../view/redux/common/CommonState";
+import { TreeSelection } from '../view/redux/common/CommonState';
+import { IChannelId } from './Channel';
+import { NodeStructureInfo, TreeInfo } from './schema';
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "windowgatewayconnectrequest";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "windowgatewayconnectresponse";

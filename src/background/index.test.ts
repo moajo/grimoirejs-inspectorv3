@@ -6,14 +6,3 @@ const dev_gateway = new WindowGateway("bg:dev");
 const cs_gateway = new WindowGateway("bg:cs");
 
 connectionConnector(dev_gateway, cs_gateway);
-
-
-// function injectContentScript(tabId: number, path: string) {
-//     return new Promise<void>(resolve => {
-//         const scriptTag = document.createElement("script");
-//         scriptTag.setAttribute("type", "text/javascript");
-//         scriptTag.setAttribute("src", path);
-//         document.body.appendChild(scriptTag);
-//         resolve()
-//     });
-// }

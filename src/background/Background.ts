@@ -1,18 +1,13 @@
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 import {
-    CHANNEL_CONNECTION_ESTABLISHED,
-    CONNECTION_BG_TO_DEV,
-    CONNECTION_CS_TO_BG,
-    CONTENT_SCRIPT_PATH,
     CHANNEL_NOTIFY_TAB_ID,
     CHANNEL_TAB_CONNECTION_ESTABLISHED,
+    CONNECTION_BG_TO_DEV,
+    CONNECTION_CS_TO_BG,
 } from '../common/constants';
 import { IConnection, IGateway, redirect } from '../common/Gateway';
-// import { waitConnection, ConnectionInitialState } from '../common/Util';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import WaitingEstablishedGateway from '../common/WrapperGateway';
-
-// type csGateWayGenerator<T extends IConnection> = (connectionName: string, tabId: number) => IGateway<T>;
 
 type TabConnectionWaiting = {
     tabID: number,
@@ -26,11 +21,9 @@ export async function connectionConnector<
     >(
     gateway: IGateway<T>,
     csGateway: IGateway<U>,
-    // csInjector: (tabId: number, csScriptPath: string) => Promise<void>
 ) {
-    console.log(`@@@[bg] start`)
     const tabConnectionSubject = new ReplaySubject<TabConnectionWaiting>();
-    gateway = new WaitingEstablishedGateway(gateway,cn=>{
+    gateway = new WaitingEstablishedGateway(gateway, cn => {
         cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
             return {
                 tabID: tabID,
@@ -39,10 +32,10 @@ export async function connectionConnector<
             } as TabConnectionWaiting
         }).subscribe(tabConnectionSubject);
     })
-    csGateway = new WaitingEstablishedGateway(csGateway,cn=>{
+    csGateway = new WaitingEstablishedGateway(csGateway, cn => {
         cn.listen().subscribe(a => {
-            console.log(`[cs=>bg]`, a.channel, a.payload,a.senderGatewayId)
-          })
+            console.log(`[cs=>bg]`, a.channel, a.payload, a.senderGatewayId)
+        });
         cn.open(CHANNEL_NOTIFY_TAB_ID).map(tabID => {
             return {
                 tabID: tabID,

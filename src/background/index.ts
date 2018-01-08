@@ -8,7 +8,6 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     }
 });
 
-
 const dev_gateway = new PortGateway("bg:dev");
 const cs_gateway = new PortGateway("bg:cs");
 
