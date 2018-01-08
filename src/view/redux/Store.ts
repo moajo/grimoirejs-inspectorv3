@@ -9,6 +9,7 @@ import * as SelectTreeFlow from "./common/flow/SelectTreeFlow";
 import { IState } from "./State";
 import * as TreeSelector from "./tree/selector/Selector";
 import { reduce } from "rxjs/operators/reduce";
+import { Dependency } from "./common/CommonDependency";
 
 const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow, TreeSelector];
 
@@ -26,7 +27,9 @@ function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSecti
             epics.push(...section.epics);
         }
     }
-    const Epicmiddleware = createEpicMiddleware(combineEpics(...epics));
+    const Epicmiddleware = createEpicMiddleware(combineEpics(...epics), {
+        dependencies: {} as Dependency
+    });
     const reducers: { [key: string]: Reducer<IState> } = {};
     for (let key in sectionArray) {
         let reducer = sectionArray[key][0];

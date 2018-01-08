@@ -18,10 +18,9 @@ export function ConnectToServerActionCreator(): ConnectToServerAction {
     }
 }
 
-export function ConnectionEstablishedActionCreator(connection: IConnection): ConnectionEstablishedAction {
+export function ConnectionEstablishedActionCreator(): ConnectionEstablishedAction {
     return {
         type: CommonActionType.CONNECTION_ESTABLISHED,
-        connection,
     }
 }
 

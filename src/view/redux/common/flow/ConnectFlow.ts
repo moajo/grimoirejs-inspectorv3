@@ -10,15 +10,21 @@ import { CHANNEL_PUT_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../
 import { PutFrameActionCreator, ConnectionEstablishedActionCreator } from "../CommonActionCreator";
 import { ActionsObservable } from "redux-observable";
 import { FrameInfo } from "../../../../common/schema";
+import { Dependency } from "../CommonDependency";
 
 
 type FlowActions = ConnectionEstablishedAction;
 
-export function ConnectToServerEpic(action: ActionsObservable<CommonAction>, store: MiddlewareAPI<IState>): Observable<CommonAction> {
+export function ConnectToServerEpic(
+    action: ActionsObservable<CommonAction>, 
+    store: MiddlewareAPI<IState>,
+    dependency:Dependency
+): Observable<CommonAction> {
     return action.ofType(CommonActionType.CONNECT_TO_SERVER).map(async (action: Action) => {
         const gateway = new WindowGateway("dev");
         const connection = await connectToBackground(gateway, 123);//dummy tab id TODO fix
-        return ConnectionEstablishedActionCreator(connection);
+        dependency.connection = connection;
+        return ConnectionEstablishedActionCreator();
     }).flatMap(a => Observable.fromPromise(a)) as any;
 }
 
@@ -27,10 +33,10 @@ export function ConnectToServerEpic(action: ActionsObservable<CommonAction>, sto
 export function reducer(store: ICommonState = DefaultCommonState, action: FlowActions) {
     switch (action.type) {
         case CommonActionType.CONNECTION_ESTABLISHED:
-            store = {
-                ...store,
-                connection: action.connection,
-            };
+            // store = {
+            //     ...store,
+            //     connection: action.connection,
+            // };
             break;
     }
     return store;
