@@ -72,7 +72,7 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
         iframeGateway.standbyConnection(CONNECTION_CS_TO_IFRAME).shareReplay().subscribe(cn => {
             // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe connection come in`)
             cn.open(CHANNEL_NOTIFY_FRAME_STRUCTURE).subscribe(structure => {
-                // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
+                console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
                 frameStructure.children[structure.uuid] = structure;
                 frameStructureSubject.next(frameStructure);
                 childFrameConnections[structure.uuid] = cn;
@@ -119,6 +119,8 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     if (isIframe) {
         const parentConnection = await connectToParent(init);
         parentConnectionSubject.next(parentConnection);
+
+        parentConnection.post(CHANNEL_NOTIFY_FRAME_STRUCTURE,frameStructure)
 
         // TODO window.onunload で親に通知
     } else {
