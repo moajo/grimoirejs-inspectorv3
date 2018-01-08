@@ -11,13 +11,21 @@ export interface NodeSelection {
     nodeId: string;
 }
 
+export enum AdjustScreenMode {
+    Nothing,
+    BodyShrink
+}
+
 export interface ICommonState {
     frames: { [frameId: string]: FrameStructure | undefined };
     treeSelection?: TreeSelection;
     nodeSelection?: NodeSelection;
     connection?: IConnection
+    adjustScreenMode: AdjustScreenMode
 }
+
 
 export const DefaultCommonState: ICommonState = {
     frames: {},
+    adjustScreenMode: AdjustScreenMode.Nothing
 };

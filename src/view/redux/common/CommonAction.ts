@@ -1,7 +1,7 @@
 import { Action } from "redux";
 import CommonActionType from "./CommonActionType";
 import { NodeStructureInfo } from "../../../common/schema";
-import { TreeSelection, NodeSelection } from "./CommonState";
+import { TreeSelection, NodeSelection, AdjustScreenMode } from "./CommonState";
 import { IConnection } from "../../../common/Gateway";
 import { FrameStructure } from "../../../common/constants";
 
@@ -11,7 +11,9 @@ type CommonAction = ConnectToServerAction |
     PutFrameAction |
     SelectTreeAction |
     SelectNodeAction |
-    NotifyTreeStructureAction;
+    NotifyTreeStructureAction |
+    ChangeAdjustScreenModeAction |
+    EpicChangeAdjustScreenModeAction;
 export default CommonAction;
 
 export interface ConnectToServerAction extends Action {
@@ -55,4 +57,14 @@ export interface NotifyAttributeChangeAction extends Action {
     attributeFQN: string;
     oldValue: any;
     newValue: any;
+}
+
+export interface ChangeAdjustScreenModeAction extends Action {
+    type: CommonActionType.CHANGE_ADJUST_SCREEN_TYPE,
+    mode: AdjustScreenMode
+}
+
+export interface EpicChangeAdjustScreenModeAction extends Action {
+    type: CommonActionType.EPIC_CHANGE_ADJUST_SCREEN_TYPE,
+    mode: AdjustScreenMode
 }
