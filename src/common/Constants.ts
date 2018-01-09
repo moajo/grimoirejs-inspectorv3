@@ -12,17 +12,17 @@ export const CONNECTION_BG_TO_DEV = "CONNECTION_BG_TO_DEV";
 export const CONNECTION_CS_TO_IFRAME = "CONNECTION_CS_TO_IFRAME";
 
 // system
-export const CHANNEL_CONNECTION_ESTABLISHED: IChannelId<null> = "CHANNEL_CONNECTION_ESTABLISHED";
 export const CHANNEL_NOTIFY_TAB_ID: IChannelId<number> = "CHANNEL_NOTIFY_TAB_ID";
-export const CHANNEL_TAB_CONNECTION_ESTABLISHED: IChannelId<null> = "CHANNEL_TAB_CONNECTION_ESTABLISHED";
+export const CHANNEL_CONNECTION_ESTABLISHED: IChannelId<null> = "CHANNEL_CONNECTION_ESTABLISHED";
 
+// iframeが親フレームに自分のフレーム構造を通知する
 export const CHANNEL_NOTIFY_FRAME_STRUCTURE: IChannelId<FrameStructure> = "CHANNEL_NOTIFY_FRAME_STRUCTURE";
 export const CHANNEL_NOTIFY_FRAME_CLOSE: IChannelId<string> = "CHANNEL_NOTIFY_FRAME_CLOSE";
 
 // request connect with frameUUID
 export const CHANNEL_CONNECT_TO_FRAME: IChannelId<string> = "CHANNEL_CONNECT_TO_FRAME";
 // response with existing gr context.
-export const CHANNEL_FRAME_CONNECT_RESPONSE: IChannelId<boolean> = "CHANNEL_FRAME_CONNECT_RESPONSE";
+export const CHANNEL_CONNECT_TO_FRAME_RESPONSE: IChannelId<boolean> = "CHANNEL_CONNECT_TO_FRAME_RESPONSE";
 
 
 export const CHANNEL_NOTIFY_ROOT_NODES: IChannelId<null> = "CHANNEL_NOTIFY_ROOT_NODES";

@@ -1,10 +1,11 @@
 import { EMBEDDING_SCRIPT_NAME } from '../common/Constants';
 import { WindowGateway } from '../common/Gateway';
-import { contentScriptMain } from './ContentScript';
+import { ContentScriptAgent } from './ContentScript';
 
-contentScriptMain(
+const cs = new ContentScriptAgent(
+    123,// dummy
     new WindowGateway("cs:emb"),
     new WindowGateway("cs:bg"),
     EMBEDDING_SCRIPT_NAME,
-    123,// dummy
 )
+cs.start();

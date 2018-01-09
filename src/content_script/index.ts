@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
-import { contentScriptMain } from "./ContentScript";
 import { WindowGateway, PortGateway } from "../common/Gateway";
 import { EMBEDDING_SCRIPT_PATH } from "../common/Constants";
+import { ContentScriptAgent } from './ContentScript';
 
 
 
@@ -10,10 +10,11 @@ async function main() {
         chrome.runtime.sendMessage("tabid", resolve);
     });
 
-    contentScriptMain(
-        new WindowGateway("cs:emb"),
-        new PortGateway("cs:bg"),
-        chrome.runtime.getURL(EMBEDDING_SCRIPT_PATH),
+    const cs = new ContentScriptAgent(
         tabId,
+        new WindowGateway("cs:emb"),
+        new WindowGateway("cs:bg"),
+        chrome.runtime.getURL(EMBEDDING_SCRIPT_PATH),
     )
+    cs.start();
 }

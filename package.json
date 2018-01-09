@@ -8,7 +8,7 @@
     "clear": "rm -rf dist",
     "build": "webpack",
     "watch": "webpack --watch",
-    "test:server": "webpack-dev-server --open --hot --progress"
+    "test:server": "webpack-dev-server --open --progress"
   },
   "author": "",
   "license": "ISC",

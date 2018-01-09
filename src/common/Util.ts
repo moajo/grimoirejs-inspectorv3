@@ -1,8 +1,5 @@
-import { IGateway } from "./Gateway";
-import { ReplaySubject } from "rxjs";
-import { CHANNEL_CONNECTION_ESTABLISHED, FrameStructure } from "./Constants";
-import { IChannelId } from "./Channel";
-import { IConnection } from "./Connection";
+import { IChannelId } from './Channel';
+import { IConnection } from './Connection';
 
 export async function postAndWaitReply<T, U>(
     cn: IConnection,

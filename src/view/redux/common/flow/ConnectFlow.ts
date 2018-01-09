@@ -1,15 +1,15 @@
-import { Action, MiddlewareAPI } from "redux";
-import { PortGateway, WindowGateway } from "../../../../common/Gateway";
-import { Observable } from "rxjs/Observable";
-import { IState } from "../../State";
-import { connectToBackground } from "../../../../devtool/Devtool";
-import { ICommonState, DefaultCommonState } from "../CommonState";
-import CommonAction, { GetFramesAction, ConnectionEstablishedAction } from "../CommonAction";
-import CommonActionType from "../CommonActionType";
-import { CHANNEL_PUT_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../common/Constants";
-import { PutFrameActionCreator, ConnectionEstablishedActionCreator } from "../CommonActionCreator";
-import { ActionsObservable } from "redux-observable";
-import { Dependency } from "../CommonDependency";
+import { Action, MiddlewareAPI } from 'redux';
+import { ActionsObservable } from 'redux-observable';
+import { Observable } from 'rxjs/Observable';
+
+import { WindowGateway } from '../../../../common/Gateway';
+import { connectToBackground } from '../../../../devtool/Devtool';
+import { IState } from '../../State';
+import CommonAction, { ConnectionEstablishedAction } from '../CommonAction';
+import { ConnectionEstablishedActionCreator } from '../CommonActionCreator';
+import CommonActionType from '../CommonActionType';
+import { Dependency } from '../CommonDependency';
+import { DefaultCommonState, ICommonState } from '../CommonState';
 
 
 type FlowActions = ConnectionEstablishedAction;
