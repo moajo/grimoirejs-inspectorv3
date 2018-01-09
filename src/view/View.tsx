@@ -11,6 +11,7 @@ import { ConnectToServerActionCreator, changeAdjustScreenMode } from './redux/co
 import TreeSelector from './components/TreeSelector';
 import { AdjustScreenMode } from './redux/common/CommonState';
 import Dock from './Dock';
+import "./global.styl";
 
 
 export function createView() {

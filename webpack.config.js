@@ -1,5 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
+const webpack = require("webpack");
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
@@ -35,6 +36,8 @@ module.exports = {
               modules: true,
               localIdentName: '[path][name]__[local]--[hash:base64:5]'
             }
+          }, {
+            loader: 'autoprefixer-loader'
           },
           {
             loader: 'stylus-loader'
@@ -43,18 +46,10 @@ module.exports = {
       },
       { test: /\.(jpg|png)/, loader: 'url-loader' }
     ],
-
-    // rules: [
-    //   {
-    //     test: /\.js$/,
-    //     exclude: /node_modules/,
-    //     loader: 'babel-loader',
-    //     options: {
-    //       presets: ['react', 'es2015', 'react-hmre']
-    //     },
-    //   },
-    // ],
   },
+  plugins: [
+
+  ],
   devtool: 'inline-source-map',
   devServer: {
     contentBase: [

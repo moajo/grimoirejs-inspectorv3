@@ -9,12 +9,18 @@
     opacity 0.6
     animation: spin 1.5s linear infinite;
     animation-timing-function ease-in-out
+    user-select none
+    user-drag none
+    -webkit-user-drag none
 .message
     margin -20px 0px 0px 0px
+    color gray
+    user-select none
+$shake-amp = 3deg
 
 @keyframes spin {
 	0% {transform: rotate(0deg);}
-	40% {transform: rotate(1.5deg);}
-    60% {transform: rotate(-1.5deg);}
+	40% {transform: rotate($shake-amp);}
+    60% {transform: rotate(- $shake-amp);}
     100% {transform: rotate(0deg);}
 }
