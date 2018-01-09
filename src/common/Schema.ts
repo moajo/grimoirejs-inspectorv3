@@ -4,6 +4,28 @@ import Component from "grimoirejs/ref/Core/Component";
 import Attribute from "grimoirejs/ref/Core/Attribute";
 import * as _ from "lodash";
 
+export type MetaInfo = {
+    tabId: number,
+    extensionId: string
+};
+
+export type NodeSelector = {
+    frameID: string,
+    nodeID: string,
+};
+
+export type FrameStructure = {
+    uuid: string,
+    url: string,
+    frameID?: string,
+    frameClass?: string,
+    children: {
+        [key: string]: FrameStructure,
+    },
+    trees: { [key: string]: TreeInfo },
+    plugins: string[],
+}
+
 export interface ScriptTagInfo {
     scriptTagId?: string;
     scriptTagClass?: string[];

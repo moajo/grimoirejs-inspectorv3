@@ -8,34 +8,57 @@ import { ContextNotFound } from './ContextNotFound';
 import styl from "./Hierarchy.styl";
 import NameConverter from '../NameConverter';
 import * as _ from 'lodash';
+import cx from "classnames";
+import { changeNodeExpandState } from '../redux/tree/TreeStateActionCreator';
 
 interface TreeElementLabelProps {
     node: NodeStructureInfo;
+    isOpen: boolean;
 }
 
 const TreeElementLabel: React.SFC<TreeElementLabelProps> = (props) => {
     const showExpander = !_.isEmpty(props.node.children);
     return (<div className={styl.treeElementLabelContainer}>
-        {showExpander ? <p className={styl.treeElementExpander}><i className="fas fa-caret-down"></i></p> : null}
+        {showExpander ? <p className={cx(styl.treeElementExpander, {
+            [styl.expandedIcon]: props.isOpen,
+            [styl.shrinkedIcon]: !props.isOpen
+        })}><i className={cx("fas fa-caret-down")} ></i></p> : null
+        }
         <p className={styl.treeElementLabel}><span className={styl.bracket}>&lt;</span><span className={styl.nodeName}>{NameConverter.fqnToShortName(props.node.fqn)}</span><span className={styl.bracket}>&gt;</span></p>
-    </div>);
+    </div >);
 };
 
-interface TreeElementProps {
+interface TreeElementProps extends DispatchProp<TreeElementProps> {
     node: NodeStructureInfo;
     layer: number;
+    isOpen: boolean;
 }
 
-const TreeElement: React.SFC<TreeElementProps> = (props) => {
+const TreeElementOriginal: React.SFC<TreeElementProps> = (props) => {
+    const toggleExpand = () => {
+        props.dispatch!(changeNodeExpandState(props.node.uniqueId, !props.isOpen));
+    };
     return (<div>
-        <div className={styl.currentElementLabelContainer} style={{ marginLeft: `${props.layer * 10}px` }}>
-            <TreeElementLabel node={props.node} />
+        <div className={styl.currentElementLabelContainer} style={{ paddingLeft: `${props.layer * 10}px` }} onClick={toggleExpand}>
+            <TreeElementLabel node={props.node} isOpen={props.isOpen} />
         </div>
-        <div className={styl.treeElementChildrenContainer}>
-            {props.node.children.map((c) => (<TreeElement key={c.uniqueId} node={c} layer={props.layer + 1} />))}
-        </div>
+        {
+            <div className={cx(styl.treeElementChildrenContainer, {
+                [styl.expanded]: props.isOpen,
+                [styl.shrinked]: !props.isOpen
+            })}>
+                {props.node.children.map((c) => (<TreeElement key={c.uniqueId} node={c} layer={props.layer + 1} />))}
+            </div>
+        }
     </div>);
 };
+
+const TreeElement = connect((state: IState, ownProps: any) => {
+    const isOpenOriginal = state.tree.hierarchy.isOpen[ownProps.node.uniqueId];
+    return {
+        isOpen: isOpenOriginal === undefined || isOpenOriginal
+    }
+})(TreeElementOriginal);
 
 interface HierarchyProps extends DispatchProp<HierarchyProps> {
     rootNode?: NodeStructureInfo;

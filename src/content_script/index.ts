@@ -16,6 +16,4 @@ async function main() {
         chrome.runtime.getURL(EMBEDDING_SCRIPT_PATH),
         tabId,
     )
-
-
 }
