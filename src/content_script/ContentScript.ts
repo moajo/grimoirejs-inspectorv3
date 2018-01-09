@@ -15,7 +15,6 @@ import {
     CONNECTION_CS_TO_BG,
     CONNECTION_CS_TO_EMB,
     CONNECTION_CS_TO_IFRAME,
-    FrameStructure,
     CHANNEL_NOTIFY_ROOT_NODES_RESPONSE,
     CHANNEL_NOTIFY_FRAME_CLOSE,
 } from '../common/constants';
@@ -26,6 +25,7 @@ import { Subject } from 'rxjs/Subject';
 import { Subscriber } from 'rxjs/Subscriber';
 import { Observer } from 'rxjs/Observer';
 import { IConnection, redirect } from '../common/Connection';
+import { FrameStructure } from '../common/Schema';
 
 declare function require(x: string): any;
 const uuid = require("uuid/v4");
@@ -104,6 +104,7 @@ export async function contentScriptMain<T extends IConnection, U extends IConnec
     // 変化するのはembConnectionSubjectとselectFrameRequestStream
     Observable.combineLatest(selectFrameRequestStream, embConnectionSubject, parentConnectionSubject.filter(isNotNullOrUndefined)).subscribe(triple => {
         const [frameUUID, embConnection, parentConnection] = triple;
+        console.log("@@@@@@@@@@@@;;;;;;;;;;",frameUUID)
         if (currentFrameUUID === frameUUID) {
             if (!embConnection) { // not found gr context yet
                 parentConnection.post(CHANNEL_FRAME_CONNECT_RESPONSE, false);
@@ -200,6 +201,7 @@ function subscribeEmbConnection(
 ) {
     embConnectionObservable.filter(isNotNullOrUndefined).subscribe(cn => {
         cn.open(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE).subscribe(trees => {
+            console.log("@@@treee",trees)
             const newValue = {
                 ...frameStructureSubject.getValue(),
                 trees,

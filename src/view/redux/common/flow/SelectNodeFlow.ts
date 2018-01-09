@@ -1,13 +1,10 @@
-import { ActionsObservable } from "redux-observable";
-import CommonAction, { ConnectionEstablishedAction, SelectTreeAction, SelectNodeAction } from "../CommonAction";
-import CommonActionType from "../CommonActionType";
-import { MiddlewareAPI } from "redux";
-import { IState } from "../../State";
-import { Observable } from "rxjs/Observable";
-import { NodeStructureInfo } from "../../../../common/schema";
-import { CHANNEL_PUT_FRAMES, CHANNEL_SELECT_TREE, CHANNEL_NOTIFY_TREE_STRUCTURE } from "../../../../common/constants";
-import { PutFrameActionCreator, NotifyTreeStructureActionCreator } from "../CommonActionCreator";
-import { ICommonState } from "../CommonState";
+import { MiddlewareAPI } from 'redux';
+import { ActionsObservable } from 'redux-observable';
+import { Observable } from 'rxjs/Observable';
+
+import { IState } from '../../State';
+import CommonAction, { SelectNodeAction } from '../CommonAction';
+import { ICommonState } from '../CommonState';
 
 
 
