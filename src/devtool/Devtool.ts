@@ -1,4 +1,4 @@
-import { CHANNEL_NOTIFY_TAB_ID, CHANNEL_TAB_CONNECTION_ESTABLISHED, CONNECTION_BG_TO_DEV } from '../common/constants';
+import { CHANNEL_NOTIFY_TAB_ID, CHANNEL_TAB_CONNECTION_ESTABLISHED, CONNECTION_BG_TO_DEV } from '../common/Constants';
 import { IGateway } from '../common/Gateway';
 import { postAndWaitReply } from '../common/Util';
 import { IConnection } from '../common/Connection';

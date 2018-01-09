@@ -4,7 +4,7 @@ import CommonActionType from "../CommonActionType";
 import { MiddlewareAPI } from "redux";
 import { IState } from "../../State";
 import { Observable } from "rxjs/Observable";
-import { CHANNEL_PUT_FRAMES, FrameStructure } from "../../../../common/constants";
+import { CHANNEL_PUT_FRAMES, FrameStructure } from "../../../../common/Constants";
 import { PutFrameActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
 import { Dependency } from "../CommonDependency";

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 import { contentScriptMain } from "./ContentScript";
 import { WindowGateway, PortGateway } from "../common/Gateway";
-import { EMBEDDING_SCRIPT_PATH } from "../common/constants";
+import { EMBEDDING_SCRIPT_PATH } from "../common/Constants";
 
 
 

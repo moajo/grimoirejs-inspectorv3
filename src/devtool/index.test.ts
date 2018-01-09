@@ -1,6 +1,6 @@
 import { createView } from "../view/View";
 import { connectToBackground } from "./Devtool";
-import { CONTENT_SCRIPT_PATH, REQUEST_NOTIFY_METAINFO, MetaInfo } from "../common/constants";
+import { CONTENT_SCRIPT_PATH, REQUEST_NOTIFY_METAINFO, MetaInfo } from "../common/Constants";
 import { PortGateway, WindowGateway } from "../common/Gateway";
 
 (async () => {

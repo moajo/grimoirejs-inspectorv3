@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { ISubscription, AnonymousSubscription } from 'rxjs/Subscription';
 
 import { IChannelId } from './Channel';
-import { MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST, MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE, DISCONNECT_SIGNAL } from './constants';
+import { MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST, MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE, DISCONNECT_SIGNAL } from './Constants';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { NextObserver, ErrorObserver, CompletionObserver, PartialObserver } from 'rxjs/Observer';
 import { Subscribable } from 'rxjs/Observable';

@@ -1,7 +1,7 @@
 import { IChannelId, Channel } from "./Channel";
 import { Observable } from "rxjs/Observable";
 import { ConnectionPacket } from "./Gateway";
-import { DISCONNECT_SIGNAL } from "./constants";
+import { DISCONNECT_SIGNAL } from "./Constants";
 import { ISubscription, AnonymousSubscription } from "rxjs/Subscription";
 import { Subject, ReplaySubject } from "rxjs";
 import { PartialObserver, NextObserver } from "rxjs/Observer";

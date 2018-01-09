@@ -1,6 +1,6 @@
 import { TreeSelection } from '../view/redux/common/CommonState';
 import { IChannelId } from './Channel';
-import { NodeStructureInfo, TreeInfo, FrameStructure } from './schema';
+import { NodeStructureInfo, TreeInfo, FrameStructure } from './Schema';
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE";

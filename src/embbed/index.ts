@@ -10,9 +10,9 @@ import {
     FrameStructure,
     CHANNEL_NOTIFY_ROOT_NODES,
     CHANNEL_NOTIFY_ROOT_NODES_RESPONSE,
-} from '../common/constants';
+} from '../common/Constants';
 import { WindowGateway } from '../common/Gateway';
-import { convertToNodeStructureInfo, convertToScriptTagInfo } from '../common/schema';
+import { convertToNodeStructureInfo, convertToScriptTagInfo } from '../common/Schema';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 async function main() {

@@ -1,4 +1,4 @@
-import { EMBEDDING_SCRIPT_NAME } from '../common/constants';
+import { EMBEDDING_SCRIPT_NAME } from '../common/Constants';
 import { WindowGateway } from '../common/Gateway';
 import { contentScriptMain } from './ContentScript';
 

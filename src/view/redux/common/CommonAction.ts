@@ -1,8 +1,8 @@
 import { Action } from "redux";
 import CommonActionType from "./CommonActionType";
-import { NodeStructureInfo } from "../../../common/schema";
+import { NodeStructureInfo } from "../../../common/Schema";
 import { TreeSelection, NodeSelection, AdjustScreenMode, AdjustScreenRegion } from "./CommonState";
-import { FrameStructure } from "../../../common/constants";
+import { FrameStructure } from "../../../common/Constants";
 
 type CommonAction = ConnectToServerAction |
     ConnectionEstablishedAction |

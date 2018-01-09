@@ -1,6 +1,6 @@
 import { IState } from "./redux/State";
-import { GomlNodeInfo, TreeInfo } from "../common/schema";
-import { FrameStructure } from "../common/constants";
+import { GomlNodeInfo, TreeInfo } from "../common/Schema";
+import { FrameStructure } from "../common/Constants";
 
 export default class SelectionFilter {
     /**

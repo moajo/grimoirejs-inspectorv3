@@ -6,7 +6,7 @@ import {
     CHANNEL_TAB_CONNECTION_ESTABLISHED,
     CONNECTION_BG_TO_DEV,
     CONNECTION_CS_TO_BG,
-} from '../common/constants';
+} from '../common/Constants';
 import { IGateway } from '../common/Gateway';
 
 type TabConnectionWaiting = {

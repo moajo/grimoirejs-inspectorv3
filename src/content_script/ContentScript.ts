@@ -17,7 +17,7 @@ import {
     CONNECTION_CS_TO_IFRAME,
     CHANNEL_NOTIFY_ROOT_NODES_RESPONSE,
     CHANNEL_NOTIFY_FRAME_CLOSE,
-} from '../common/constants';
+} from '../common/Constants';
 import { IGateway, WindowGateway } from '../common/Gateway';
 import { isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
 import embed from '../embbed/Embedder';

@@ -1,4 +1,4 @@
-import { FrameStructure } from "../../../common/constants";
+import { FrameStructure } from "../../../common/Constants";
 import { IConnection } from "../../../common/Connection";
 
 export interface TreeSelection {

@@ -1,4 +1,4 @@
-import { NodeStructureInfo } from '../../../common/schema';
+import { NodeStructureInfo } from '../../../common/Schema';
 import {
     ConnectionEstablishedAction,
     ConnectToServerAction,
@@ -13,7 +13,7 @@ import {
 } from './CommonAction';
 import CommonActionType from './CommonActionType';
 import { TreeSelection, AdjustScreenMode, AdjustScreenRegion } from './CommonState';
-import { FrameStructure } from '../../../common/constants';
+import { FrameStructure } from '../../../common/Constants';
 
 export function ConnectToServerActionCreator(): ConnectToServerAction {
     return {

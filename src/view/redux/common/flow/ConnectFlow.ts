@@ -6,7 +6,7 @@ import { connectToBackground } from "../../../../devtool/Devtool";
 import { ICommonState, DefaultCommonState } from "../CommonState";
 import CommonAction, { GetFramesAction, ConnectionEstablishedAction } from "../CommonAction";
 import CommonActionType from "../CommonActionType";
-import { CHANNEL_PUT_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../common/constants";
+import { CHANNEL_PUT_FRAMES, CHANNEL_CONNECTION_ESTABLISHED } from "../../../../common/Constants";
 import { PutFrameActionCreator, ConnectionEstablishedActionCreator } from "../CommonActionCreator";
 import { ActionsObservable } from "redux-observable";
 import { Dependency } from "../CommonDependency";

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { TreeSelection } from '../redux/common/CommonState';
 import styl from "./TreeSelector.styl";
-import { TreeInfo } from '../../common/schema';
+import { TreeInfo } from '../../common/Schema';
 import _ from "lodash";
 import cx from "classnames";
 import SelectionFilter from '../SelectionFilter';
 import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
 import { switchTreeSelector } from '../redux/tree/selector/Selector';
-import { FrameStructure } from '../../common/constants';
+import { FrameStructure } from '../../common/Constants';
 import { window } from 'rxjs/operators/window';
 import { SelectTreeActionCreator } from '../redux/common/CommonActionCreator';
 

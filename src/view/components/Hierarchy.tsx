@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { GomlNodeInfo } from '../../common/schema';
+import { GomlNodeInfo } from '../../common/Schema';
 import { connect, DispatchProp } from 'react-redux';
 import { IState } from '../redux/State';
 import SelectionFilter from '../SelectionFilter';

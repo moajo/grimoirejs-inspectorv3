@@ -3,7 +3,7 @@ import Component from 'grimoirejs/ref/Core/Component';
 import { EVENT_ROOT_NODE_DID_ADDED } from 'grimoirejs/ref/Core/Constants';
 import GomlNode from 'grimoirejs/ref/Core/GomlNode';
 import { GrimoireInterface } from 'grimoirejs/ref/Tool/Types';
-import { AttributeInfo, ComponentInfo, GomlNodeInfo, NodeStructureInfo } from '../common/schema';
+import { AttributeInfo, ComponentInfo, GomlNodeInfo, NodeStructureInfo } from '../common/Schema';
 import { IConnection } from '../common/Connection';
 
 export function notifyRootNodes(connection: IConnection, gr: GrimoireInterface) {
