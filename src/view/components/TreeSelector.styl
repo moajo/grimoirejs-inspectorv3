@@ -6,7 +6,7 @@
     grid-template-rows 1fr auto 1fr
     grid-template-areas "A1 A2" "LABEL SPINNER" "A3 A4"
     text-align center
-    border 1px solid gray
+    border-bottom 1px solid rgba(30,30,30,0.3)
     &:hover
         background-color lightgray
         cursor pointer
@@ -51,7 +51,8 @@
     border 1px solid gray
     display grid
     grid-template-columns 32px calc(100% - 32px)
-    grid-template-rows auto auto auto
+    grid-template-rows 32px auto auto
+    align-items center
     grid-template-areas "ICON URL" "A1 CANVASES" "A2 FRAMES"
     background-color white
     &:hover
@@ -61,12 +62,36 @@
     grid-area ICON
 .urlContainer
     grid-area URL
+    text-align left
+    padding 0px 10px
 .canvasListContainer
     grid-area CANVASES
     &:hover
         background-color #AA88CC
+
 .framesListContainer
     grid-area FRAMES
+
 .treeElementContainer
     border 1px solid gray
     margin 0px -1px -1px 0px
+    height 32px
+    display flex
+    align-items center
+    justify-content center
+
+.expanderContainer
+    z-index 1000
+    position relative
+    transform-origin top
+    animation expand .1s ease 0s 1;
+
+@keyframes expand {
+  0% {
+    transform: scaleY(0);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}

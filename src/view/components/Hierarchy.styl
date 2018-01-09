@@ -1,0 +1,84 @@
+.treeElementLabel
+    margin 1px 0px
+    grid-area LABEL
+.currentElementLabelContainer
+    &:hover
+        background-color aliceblue
+
+.treeElementExpander
+    text-align center
+    grid-area EXPANDER
+    margin 0px
+    color gray
+
+.treeElementLabelContainer
+    display grid
+    grid-template-columns 14px 1fr
+    grid-template-areas "EXPANDER LABEL"
+    align-items center
+
+.hierarchyContainer
+    padding 10px
+.bracket
+    color gray
+.nodeName
+    color #7744BB
+
+.shrinked
+    animation shrink .1s ease 0s 1;
+    transform-origin top
+    transform scaleY(0)
+    height 0px
+.expanded
+    animation expand .1s ease 0s 1;
+    transform-origin top
+    transform scaleY(1)
+@keyframes expand {
+  0% {
+    transform: scaleY(0);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes shrink {
+  0% {
+    transform: scaleY(1);
+  }
+
+  100% {
+    transform: scaleY(0);
+    height 0px
+  }
+}
+
+.expandedIcon
+    animation expand-icon .1s ease 0s 1;
+    transform rotate(0deg)
+
+.shrinkedIcon
+    animation shrink-icon .1s ease 0s 1;
+    transform rotate(-90deg)
+
+
+@keyframes expand-icon {
+  0% {
+    transform rotate(-90deg)
+  }
+
+  100% {
+    transform rotate(0deg)
+  }
+}
+
+@keyframes shrink-icon {
+  0% {
+    transform rotate(0deg)
+  }
+
+  100% {
+    transform rotate(-90deg)
+  }
+}

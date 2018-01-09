@@ -20,7 +20,6 @@ export function SelectTreeEpic(action: ActionsObservable<SelectTreeAction>, stor
                     resolve(a)
                 })
             });
-
             dependency.connection!.post(CHANNEL_SELECT_TREE, action.selection);
             return NotifyTreeStructureActionCreator(await p, action.selection);
         }).flatMap(a => Observable.fromPromise(a)) as any;

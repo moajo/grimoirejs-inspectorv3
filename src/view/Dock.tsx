@@ -7,9 +7,11 @@ import TreeSelector from './components/TreeSelector';
 import cx from "classnames";
 import { MouseEvent } from 'react';
 import { resizeAdjustScreen } from './redux/common/CommonActionCreator';
+import Hierarchy from './components/Hierarchy';
+import LeftControl from './LeftControl';
 interface ResizablePaneProps {
     resizableEdge: "LEFT" | "RIGHT" | "BOTTOM" | "TOP";
-    components: JSX.Element[];
+    component: JSX.Element;
     onGripMove(movementX: number, movementY: number): void;
 }
 
@@ -27,7 +29,7 @@ export class ResizablePane extends React.PureComponent<ResizablePaneProps, any> 
                 this._startResizeMonitor();
             }} />
             <div className={styl.resizableContent}>
-                {this.props.components}
+                {this.props.component}
             </div>
         </div >);
     }
@@ -60,7 +62,7 @@ const Dock: React.SFC<DockProps> = (props) => {
         gridTemplateRows: `${props.region.top}px 1fr ${props.region.bottom}px`
     }} className={styl.dockContainer}>
         <div style={{ gridArea: "LEFT", height: "100%" }}>
-            <ResizablePane resizableEdge="RIGHT" components={[<TreeSelector key="tree-selector" />]} onGripMove={(x, y) => {
+            <ResizablePane resizableEdge="RIGHT" component={<LeftControl />} onGripMove={(x, y) => {
                 props.dispatch!(resizeAdjustScreen("left", x))
             }} />
         </div>

@@ -82,7 +82,7 @@ const FrameElement: React.SFC<FrameElementProps> = (props) => {
 
 const TreeSelectorExpander: React.SFC<TreeSelectorProps> = (props) => {
     return (
-        <div>
+        <div className={styl.expanderContainer}>
             {_.flatMap(_.filter(props.frames, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value!.uuid} frame={value!} />))}
         </div>
     );
