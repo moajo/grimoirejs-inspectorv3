@@ -22,7 +22,7 @@ export interface NodeStructureInfo {
     components: ComponentInfo[];
 }
 
-export interface GomlNodeInfo {
+export interface GomlNodeInfo { // ??? NodeStructureInfoとの違いは?
     fqn: string;
     uniqueId: string
     components: ComponentInfo[];
