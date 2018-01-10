@@ -21,6 +21,7 @@
 
 .disabledIcon,.disabledLabel
     color gray
+    user-select none
 
 .indicatorLabelContainer
     grid-area LABEL
@@ -64,6 +65,9 @@
     grid-area URL
     text-align left
     padding 0px 10px
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
 .canvasListContainer
     grid-area CANVASES
     &:hover

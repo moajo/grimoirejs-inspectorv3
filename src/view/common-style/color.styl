@@ -1,0 +1,14 @@
+$colors = {
+    color:{
+        base:gray,
+        emp:#74b
+    },
+    background:{
+        base: white,
+        light: lightgray,
+        hover:lightgray
+    }
+}
+
+$col($type = "color", $tone = "base")
+  return $colors[$type][$tone];

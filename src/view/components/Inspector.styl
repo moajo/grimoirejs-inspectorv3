@@ -1,0 +1,48 @@
+@import "../common-style/index.styl"
+.bracket
+    color $col()
+
+.nodeName
+    color $col("color","emp")
+
+.inspectorHeaderContainer
+    text-align center
+    padding 6px 10px
+    margin 0px
+    font-size 24px
+    border-bottom 1px dotted #F9F9F9
+
+.componentHeaderContainer
+    display grid
+    grid-template-columns 25px 25px 1fr 25px
+    grid-template-areas "ICON CHECKBOX NAME MENU"
+    align-items center
+    height 32px
+    border-top 1px solid rgba(30,30,30,0.3)
+    border-bottom 1px dotted rgba(30,30,30,0.1)
+.componentName
+    grid-area NAME
+    color $col()
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+    margin 0px 7px
+
+.checkbox
+    color $col()
+    grid-area CHECKBOX
+    text-align center
+    margin 0px
+
+.iconbox
+    color $col("color","emp")
+    text-align center
+    margin 0px
+
+.menu
+    margin 0px
+
+.toolboxContainer
+    display grid
+    grid-template-columns 1fr 32px
+    grid-template-areas "SEARCHBOX ADD"

@@ -9,6 +9,7 @@ import { MouseEvent } from 'react';
 import { resizeAdjustScreen } from './redux/common/CommonActionCreator';
 import Hierarchy from './components/Hierarchy';
 import LeftControl from './LeftControl';
+import RightControl from './RightControl';
 interface ResizablePaneProps {
     resizableEdge: "LEFT" | "RIGHT" | "BOTTOM" | "TOP";
     component: JSX.Element;
@@ -67,7 +68,7 @@ const Dock: React.SFC<DockProps> = (props) => {
             }} />
         </div>
         <div style={{ gridArea: "RIGHT", height: "100%" }}>
-
+            <ResizablePane resizableEdge="LEFT" onGripMove={(x, y) => props.dispatch!(resizeAdjustScreen("right", -x))} component={<RightControl />} />
         </div>
     </div>);
 };

@@ -1,5 +1,9 @@
+@import "../common-style/index.styl"
 .treeElementLabel
     margin 1px 0px
+    white-space nowrap
+    overflow hidden
+    text-overflow ellipsis
     grid-area LABEL
 .currentElementLabelContainer
     &:hover
@@ -9,7 +13,7 @@
     text-align center
     grid-area EXPANDER
     margin 0px
-    color gray
+    color $col()
 
 .treeElementLabelContainer
     display grid
@@ -20,9 +24,9 @@
 .hierarchyContainer
     padding 10px
 .bracket
-    color gray
+    color $col()
 .nodeName
-    color #7744BB
+    color $col("color","emp")
 
 .shrinked
     animation shrink .1s ease 0s 1;
