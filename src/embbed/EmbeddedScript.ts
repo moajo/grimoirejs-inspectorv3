@@ -34,6 +34,7 @@ function convertToComponentInfo(component: Component): ComponentInfo {
     return {
         fqn: component.name.fqn,
         uniqueId: component.id,
+        enabled: component.enabled,
         attributes: component.attributes.toArray().reduce((obj, attribute) => {
             obj[attribute.name.fqn] = convertToAttributeInfo(attribute);
             return obj;

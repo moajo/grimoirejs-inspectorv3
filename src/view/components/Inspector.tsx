@@ -5,6 +5,7 @@ import { connect, DispatchProp } from 'react-redux';
 import NameConverter from '../NameConverter';
 import { IState } from '../redux/State';
 import styl from "./Inspector.styl";
+import cx from "classnames";
 import IconButton from './IconButton';
 
 interface ToolBoxProps {
@@ -12,7 +13,6 @@ interface ToolBoxProps {
 
 const ToolBox: React.SFC<ToolBoxProps> = (props) => {
     return (<div className={styl.toolboxContainer}>
-        <IconButton gridArea="ADD" icon={<i className="fas fa-puzzle-piece"></i>} />
     </div>);
 };
 
@@ -21,11 +21,12 @@ interface ComponentElementProps {
 }
 
 const ComponentElement: React.SFC<ComponentElementProps> = (props) => {
+    const enabled = props.component.enabled;
     return (<div>
         <div className={styl.componentHeaderContainer}>
-            <p className={styl.checkbox}><i className="far fa-square"></i></p>
+            <p className={styl.checkbox}><i className={cx({ "far fa-square": !enabled, "fas fa-check-square": enabled })} ></i></p>
             <p className={styl.iconbox}><i className="fas fa-cube"></i></p>
-            <p className={styl.componentName}>{NameConverter.fqnToShortName(props.component.fqn)}</p>
+            <p className={styl.componentName} > {NameConverter.fqnToShortName(props.component.fqn)}</p>
             <p className={styl.menu}><i className="fas fa-bars"></i></p>
         </div>
         <div style={{ height: "120px" }}></div>
@@ -51,6 +52,7 @@ const Inspector: React.SFC<InspectorProps> = (props) => {
         <ControlHeader header="Components" />
         <ToolBox />
         {props.node.components.map(c => (<ComponentElement component={c} />))}
+        <IconButton label="Add component" icon={<i className="fas fa-puzzle-piece"></i>} />
     </div>);
 };
 
@@ -62,11 +64,13 @@ export default connect(
             components: [{
                 fqn: "grimoiejs.Grimoire",
                 uniqueId: "ANUDSAUDH",
-                attributes: {}
+                attributes: {},
+                enabled: false
             }, {
                 fqn: "fundamental.Transform",
                 uniqueId: "sajias",
-                attributes: {}
+                attributes: {},
+                enabled: true
             }] as ComponentInfo[]
         }
     })

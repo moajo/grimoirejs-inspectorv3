@@ -9,37 +9,44 @@ import { IState } from '../redux/State';
 import { changeNodeExpandState } from '../redux/tree/TreeStateActionCreator';
 import { ContextNotFound } from './ContextNotFound';
 import styl from './Hierarchy.styl';
+import { NodeSelection } from '../redux/common/CommonState';
 
 
-interface TreeElementLabelProps {
+interface TreeElementLabelProps extends DispatchProp<TreeElementLabelProps> {
     node: NodeStructureInfo;
     isOpen: boolean;
 }
 
-const TreeElementLabel: React.SFC<TreeElementLabelProps> = (props) => {
+const TreeElementLabelOriginal: React.SFC<TreeElementLabelProps> = (props) => {
     const showExpander = !_.isEmpty(props.node.children);
+    const toggleExpand = () => {
+        props.dispatch!(changeNodeExpandState(props.node.uniqueId, !props.isOpen));
+    };
     return (<div className={styl.treeElementLabelContainer}>
         {showExpander ? <p className={cx(styl.treeElementExpander, {
             [styl.expandedIcon]: props.isOpen,
             [styl.shrinkedIcon]: !props.isOpen
-        })}><i className={cx("fas fa-caret-down")} ></i></p> : null
+        })} onClick={toggleExpand}><i className={cx("fas fa-caret-down")}></i></p> : null
         }
         <p className={styl.treeElementLabel}><span className={styl.bracket}>&lt;</span><span className={styl.nodeName}>{NameConverter.fqnToShortName(props.node.fqn)}</span><span className={styl.bracket}>&gt;</span></p>
     </div >);
 };
 
+const TreeElementLabel = connect()(TreeElementLabelOriginal);
+
 interface TreeElementProps extends DispatchProp<TreeElementProps> {
     node: NodeStructureInfo;
+    nodeSelection: NodeSelection;
     layer: number;
     isOpen: boolean;
 }
 
 const TreeElementOriginal: React.SFC<TreeElementProps> = (props) => {
-    const toggleExpand = () => {
-        props.dispatch!(changeNodeExpandState(props.node.uniqueId, !props.isOpen));
-    };
+    const isSelected = props.nodeSelection && props.nodeSelection.nodeId === props.node.uniqueId;
     return (<div>
-        <div className={styl.currentElementLabelContainer} style={{ paddingLeft: `${props.layer * 10}px` }} onClick={toggleExpand}>
+        <div className={cx(styl.currentElementLabelContainer, {
+            [styl.selectedElementLabelContainer]: isSelected
+        })} style={{ paddingLeft: `${props.layer * 10}px` }}>
             <TreeElementLabel node={props.node} isOpen={props.isOpen} />
         </div>
         {
@@ -47,7 +54,7 @@ const TreeElementOriginal: React.SFC<TreeElementProps> = (props) => {
                 [styl.expanded]: props.isOpen,
                 [styl.shrinked]: !props.isOpen
             })}>
-                {props.node.children.map((c) => (<TreeElement key={c.uniqueId} node={c} layer={props.layer + 1} />))}
+                {props.node.children.map((c) => (<TreeElement key={c.uniqueId} node={c} layer={props.layer + 1} nodeSelection={props.nodeSelection} />))}
             </div>
         }
     </div>);
@@ -62,6 +69,7 @@ const TreeElement = connect((state: IState, ownProps: any) => {
 
 interface HierarchyProps extends DispatchProp<HierarchyProps> {
     rootNode?: NodeStructureInfo;
+    nodeSelection: NodeSelection;
 }
 
 const Hierarchy: React.SFC<HierarchyProps> = (props) => {
@@ -70,7 +78,7 @@ const Hierarchy: React.SFC<HierarchyProps> = (props) => {
     }
     return (
         <div className={styl.hierarchyContainer}>
-            <TreeElement node={props.rootNode} layer={0} />
+            <TreeElement node={props.rootNode} layer={0} nodeSelection={props.nodeSelection} />
         </div>);
 };
 
@@ -107,5 +115,12 @@ export default connect((store: IState): HierarchyProps => ({
             }]
         }
         ]
+    },
+    nodeSelection: {
+        treeSelection: {
+            frameUUID: "",
+            rootNodeId: ""
+        },
+        nodeId: "ijk"
     }
 }))(Hierarchy);

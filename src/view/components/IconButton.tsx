@@ -3,6 +3,7 @@ import styl from "./IconButton.styl";
 import cx from "classnames";
 interface IconButtonProps {
     icon: JSX.Element;
+    label?: string;
     gridArea?: string;
     isToggle?: boolean;
     selected?: boolean;
@@ -24,7 +25,7 @@ const IconButton: React.SFC<IconButtonProps> = (props) => {
         [styl.disabled]: props.enabled === false,
         [styl.enabled]: props.enabled || props.enabled === undefined
     })} style={{ gridArea: props.gridArea }} onClick={clicked}>
-        {props.icon}
+        {props.icon}{props.label ? <p>{props.label}</p> : null}<p></p>
     </div>);
 };
 

@@ -53,6 +53,7 @@ export interface GomlNodeInfo { // ??? NodeStructureInfoとの違いは?
 export interface ComponentInfo {
     uniqueId: string,
     fqn: string,
+    enabled: boolean;
     attributes: { [attributeFQN: string]: AttributeInfo }
 }
 
@@ -90,6 +91,7 @@ export function convertToComponentInfo(component: Component): ComponentInfo {
     return {
         uniqueId: component.id,
         fqn: component.name.fqn,
+        enabled: component.enabled,
         attributes: component.attributes.toArray().reduce((obj, attr) => {
             obj[attr.name.fqn] = convertToAttributeInfo(attr);
             return obj;

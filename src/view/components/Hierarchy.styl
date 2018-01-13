@@ -8,12 +8,18 @@
 .currentElementLabelContainer
     &:hover
         background-color aliceblue
-
+        cursor pointer
+.selectedElementLabelContainer
+    background-color #4779D2
+    &:hover
+        background-color #5789E2
 .treeElementExpander
     text-align center
     grid-area EXPANDER
     margin 0px
     color $col()
+    &:hover
+      color $col("color","dark")
 
 .treeElementLabelContainer
     display grid
