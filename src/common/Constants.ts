@@ -1,6 +1,6 @@
 import { TreeSelection } from '../view/redux/common/CommonState';
 import { IChannelId } from './Channel';
-import { NodeStructureInfo, TreeInfo, FrameStructure, NodeSelector } from './Schema';
+import { NodeStructureInfo, TreeInfo, FrameStructure, NodeSelector, AttributeInfo, ComponentInfo } from './Schema';
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE";
@@ -33,8 +33,11 @@ export const CHANNEL_PUT_FRAMES = "CHANNEL_PUT_FRAMES" as IChannelId<FrameStruct
 export const CHANNEL_SELECT_TREE = "CHANNEL_SELECT_TREE" as IChannelId<TreeSelection>;
 export const CHANNEL_NOTIFY_TREE_STRUCTURE = "CHANNEL_NOTIFY_TREE_STRUCTURE" as IChannelId<NodeStructureInfo>;
 
+
+// ノード選択。これ流すと
 export const CHANNEL_SELECT_NODE = "CHANNEL_SELECT_NODE" as IChannelId<NodeSelector>;
-export const CHANNEL_SELECT_NODE_RESPONSE = "CHANNEL_SELECT_NODE_RESPONSE" as IChannelId<NodeSelector>;
+// 属性変化時にこれが流れるようになる。
+export const CHANNEL_NOTIFY_ATTRIBUTE_CHANGE = "CHANNEL_NOTIFY_ATTRIBUTE_CHANGE" as IChannelId<AttributeInfo>;
 
 export const EMBEDDING_SCRIPT_NAME = "embbed.js";
 export const EMBEDDING_SCRIPT_PATH = "dist/" + EMBEDDING_SCRIPT_NAME;

@@ -38,9 +38,11 @@ async function main(gr: GrimoireInterface) {
         connection.open(CHANNEL_NOTIFY_ROOT_NODES)
             .map(() => treesSubject.getValue())
             .subscribe(connection.open(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE));
+            
         connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
             const rootNode = gr.rootNodes[req.rootNodeId];
             const nodeStructure = convertToNodeStructureInfo(rootNode);
+            console.log("PPP:", nodeStructure)
             connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
         })
 
