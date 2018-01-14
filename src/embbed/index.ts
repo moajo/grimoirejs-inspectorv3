@@ -65,8 +65,9 @@ async function main(gr: GrimoireInterface) {
 
 
 const gr = (window as any).GrimoireJS as GrimoireInterface;
-console.log("init", gr.callInitializedAlready)
+console.log("init", gr.callInitializedAlready, location.href)
 gr(() => {
+    console.log("initGr", gr.callInitializedAlready, location.href)
     main(gr);
 });
 

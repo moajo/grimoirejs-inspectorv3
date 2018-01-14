@@ -1,15 +1,15 @@
 import { ActionsObservable } from "redux-observable";
-import CommonAction, { ConnectionEstablishedAction } from "../CommonAction";
+import CommonAction, { ConnectionEstablishedAction, PutFrameAction } from "../CommonAction";
 import CommonActionType from "../CommonActionType";
 import { MiddlewareAPI } from "redux";
 import { IState } from "../../State";
 import { Observable } from "rxjs/Observable";
 import { CHANNEL_PUT_FRAMES, FrameStructure } from "../../../../common/Constants";
-import { PutFrameActionCreator } from "../CommonActionCreator";
+import { PutFrameActionCreator, SelectTreeActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
 import { Dependency } from "../CommonDependency";
-
-
+import { TreeSelection } from "../CommonState"
+import _ from "lodash";
 
 export function GetFramesEpic(
     actions: ActionsObservable<CommonAction>,
@@ -26,9 +26,23 @@ export function GetFramesEpic(
     return p;
 }
 
+export function PutFrameEpic(
+    actions: ActionsObservable<CommonAction>,
+    store: MiddlewareAPI<IState>,
+    dependency: Dependency,
+): Observable<CommonAction> {
+    return actions.ofType(CommonActionType.PUT_FRAME).filter((a) => !store.getState().common.treeSelection && !!(a as PutFrameAction).frameInfo && !!_.pick((a as PutFrameAction).frameInfo!.trees)).map((a) => {
+        const put: PutFrameAction = a as PutFrameAction;
+        return SelectTreeActionCreator({
+            frameUUID: put.frameId,
+            rootNodeId: _.sample(put.frameInfo!.trees)!.rootNodeId
+        });
+    });
+}
+
 export const storeSection = "common";
 
-export const epics = [GetFramesEpic];
+export const epics = [GetFramesEpic, PutFrameEpic];
 
 export function reducer(store: ICommonState, action: CommonAction) {
     switch (action.type) {
