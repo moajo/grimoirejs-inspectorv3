@@ -1,6 +1,6 @@
 import { TreeSelection } from '../view/redux/common/CommonState';
 import { IChannelId } from './Channel';
-import { NodeStructureInfo, TreeInfo, FrameStructure } from './Schema';
+import { NodeStructureInfo, TreeInfo, FrameStructure, NodeSelector } from './Schema';
 
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_REQUEST";
 export const MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE = "MESSAGE_TYPE_WINDOW_RESPONSE_CONNECT_RESPONSE";
@@ -34,6 +34,7 @@ export const CHANNEL_SELECT_TREE = "CHANNEL_SELECT_TREE" as IChannelId<TreeSelec
 export const CHANNEL_NOTIFY_TREE_STRUCTURE = "CHANNEL_NOTIFY_TREE_STRUCTURE" as IChannelId<NodeStructureInfo>;
 
 export const CHANNEL_SELECT_NODE = "CHANNEL_SELECT_NODE" as IChannelId<NodeSelector>;
+export const CHANNEL_SELECT_NODE_RESPONSE = "CHANNEL_SELECT_NODE_RESPONSE" as IChannelId<NodeSelector>;
 
 export const EMBEDDING_SCRIPT_NAME = "embbed.js";
 export const EMBEDDING_SCRIPT_PATH = "dist/" + EMBEDDING_SCRIPT_NAME;
@@ -41,24 +42,3 @@ export const CONTENT_SCRIPT_TEST = "content_script_test.js";
 export const CONTENT_SCRIPT_PATH = "dist/content_script.js";
 
 export const REQUEST_NOTIFY_METAINFO = "please tell me my tabid and extension id!";
-export type MetaInfo = {
-    tabId: number,
-    extensionId: string
-};
-
-export type NodeSelector = {
-    frameID: string,
-    nodeID: string,
-};
-
-export type FrameStructure = {
-    uuid: string,
-    url: string,
-    frameID?: string,
-    frameClass?: string,
-    children: {
-        [key: string]: FrameStructure,
-    },
-    trees: { [key: string]: TreeInfo },
-    plugins: string[],
-}

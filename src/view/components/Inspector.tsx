@@ -1,6 +1,6 @@
 import * as React from 'react';
 import ControlHeader from './ControlHeader';
-import { GomlNodeInfo, ComponentInfo } from '../../common/schema';
+import { ComponentInfo, NodeStructureInfo } from '../../common/schema';
 import { connect, DispatchProp } from 'react-redux';
 import NameConverter from '../NameConverter';
 import { IState } from '../redux/State';
@@ -42,7 +42,7 @@ const ComponentElement: React.SFC<ComponentElementProps> = (props) => {
     </div>);
 };
 interface InspectorHeaderProps {
-    node: GomlNodeInfo;
+    node: NodeStructureInfo;
 }
 
 const InspectorHeader: React.SFC<InspectorHeaderProps> = (props) => {
@@ -51,7 +51,7 @@ const InspectorHeader: React.SFC<InspectorHeaderProps> = (props) => {
 };
 
 interface InspectorProps extends DispatchProp<InspectorProps> {
-    node: GomlNodeInfo;
+    node: NodeStructureInfo;
 }
 
 const Inspector: React.SFC<InspectorProps> = (props) => {

@@ -8,10 +8,9 @@ import {
     CHANNEL_SELECT_NODE,
     CHANNEL_SELECT_TREE,
     CONNECTION_CS_TO_EMB,
-    FrameStructure,
 } from '../common/Constants';
 import { WindowGateway } from '../common/Gateway';
-import { convertToNodeStructureInfo, convertToScriptTagInfo } from '../common/Schema';
+import { convertToNodeStructureInfo, convertToScriptTagInfo, FrameStructure } from '../common/Schema';
 
 async function main(gr: GrimoireInterface) {
     const treesSubject = new BehaviorSubject<FrameStructure["trees"]>({});
@@ -46,7 +45,7 @@ async function main(gr: GrimoireInterface) {
         })
 
         connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector => {
-            nodeSelector.frameID
+            nodeSelector.frameUUID
         });
         return connection;
     });

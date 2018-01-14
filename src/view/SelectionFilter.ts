@@ -1,6 +1,6 @@
 import { IState } from "./redux/State";
-import { GomlNodeInfo, TreeInfo } from "../common/Schema";
-import { FrameStructure } from "../common/Constants";
+import { TreeInfo, FrameStructure, NodeStructureInfo } from "../common/Schema";
+
 
 export default class SelectionFilter {
     /**
@@ -24,7 +24,7 @@ export default class SelectionFilter {
         }
     }
 
-    public static getCurrentNode(state: IState): GomlNodeInfo | undefined {
+    public static getCurrentNode(state: IState): NodeStructureInfo | undefined {
         const root = SelectionFilter.getCurrentTree(state);
         if (!root || state.common.nodeSelection) {
             return undefined;
@@ -33,7 +33,7 @@ export default class SelectionFilter {
         }
     }
 
-    public static getCurrentRootNode(state: IState): GomlNodeInfo | undefined {
+    public static getCurrentRootNode(state: IState): NodeStructureInfo | undefined {
         const tree = SelectionFilter.getCurrentTree(state);
         if (!tree) {
             return undefined;

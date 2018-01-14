@@ -19,6 +19,7 @@ import {
     CHANNEL_NOTIFY_FRAME_CLOSE,
     CHANNEL_NOTIFY_ROOT_NODES,
     CHANNEL_NOTIFY_TREE_STRUCTURE,
+    CHANNEL_SELECT_NODE,
 } from '../common/Constants';
 import { IGateway, WindowGateway } from '../common/Gateway';
 import { isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
@@ -39,7 +40,7 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
 
     // フレーム構造
     public frameStructureSubject = new BehaviorSubject<FrameStructure>({
-        uuid: this.UUID,
+        UUID: this.UUID,
         url: location.href,
         children: {},
         trees: {},
@@ -70,6 +71,19 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
 
         (async () => {
             const init = (cn: IConnection) => {
+                cn.open(CHANNEL_SELECT_NODE).subscribe(async a=>{
+                    const emb = this.embProxiSubject.getValue();
+                    if (!emb) {
+                        return;
+                    }
+                    const parent = this.parentConnectionSubject.getValue();
+                    if (!parent) {
+                        return;
+                    }
+                    const response = await postAndWaitReply(emb, CHANNEL_SELECT_NODE, a, CHANNEL_NOTIFY_TREE_STRUCTURE)
+                    parent.post(CHANNEL_NOTIFY_TREE_STRUCTURE, response);
+
+                })
                 cn.open(CHANNEL_SELECT_TREE).flatMap(async treeSelection => {//rootのみ
                     const grExists = await this.connectToFrame(treeSelection.frameUUID);
                     return {
@@ -81,11 +95,14 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
                     if (!emb) {
                         return;
                     }
-                    const response = emb.open(CHANNEL_NOTIFY_TREE_STRUCTURE).first().toPromise();
-                    emb.post(CHANNEL_SELECT_TREE, a.treeSelection)
                     const parent = this.parentConnectionSubject.getValue();
-                    parent!.post(CHANNEL_NOTIFY_TREE_STRUCTURE, await response);
+                    if (!parent) {
+                        return;
+                    }
+                    const response = await postAndWaitReply(emb, CHANNEL_SELECT_TREE, a.treeSelection, CHANNEL_NOTIFY_TREE_STRUCTURE)
+                    parent.post(CHANNEL_NOTIFY_TREE_STRUCTURE, response);
                 });
+
                 cn.open(CHANNEL_CONNECT_TO_FRAME).flatMap(id => {//子のみ
                     return this.connectToFrame(id)
                 }).subscribe(a => {
@@ -146,12 +163,12 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
             cnp.startWith(cn => {
                 cn.open(CHANNEL_NOTIFY_FRAME_STRUCTURE).do(structure => {
                     // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
-                    this.childFrameConnections[structure.uuid] = cn;
+                    this.childFrameConnections[structure.UUID] = cn;
                 }).map(structure => {
                     const newValue = {
                         ...this.frameStructureSubject.getValue(),
                     }
-                    newValue.children[structure.uuid] = structure;
+                    newValue.children[structure.UUID] = structure;
                     return newValue;
                 }).subscribe(this.frameStructureSubject);
 
@@ -267,7 +284,7 @@ function findFrame(structure: FrameStructure, uuid: string) {
     throw new Error("frame not found")
 
     function containFrame(structure: FrameStructure, uuid: string) {
-        if (structure.uuid === uuid) {
+        if (structure.UUID === uuid) {
             return true;
         }
         for (const parentUUID in structure.children) {
