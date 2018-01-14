@@ -13,11 +13,9 @@ import {
 import { WindowGateway } from '../common/Gateway';
 import { convertToNodeStructureInfo, convertToScriptTagInfo } from '../common/Schema';
 
-async function main() {
+async function main(gr: GrimoireInterface) {
+    console.log("#@123")
     const treesSubject = new BehaviorSubject<FrameStructure["trees"]>({});
-
-    // extract gr infomation.
-    const gr = (window as any).GrimoireJS as GrimoireInterface;
 
     const trees = {} as FrameStructure["trees"];
     for (const key in gr.rootNodes) {
@@ -35,9 +33,9 @@ async function main() {
     const gateway = new WindowGateway("page:cs");
 
     const connection = (await gateway.connect(CONNECTION_CS_TO_EMB)).startWith(connection => {
-        connection.subscribe(a=>{
+        connection.subscribe(a => {
             //debug 
-            console.log("@[emb]recieved:",a.channel,a.payload)
+            console.log("@[emb]recieved:", a.channel, a.payload)
         })
         connection.open(CHANNEL_NOTIFY_ROOT_NODES)
             .map(() => treesSubject.getValue())
@@ -47,8 +45,9 @@ async function main() {
         //     connection.post(CHANNEL_PUT_FRAMES, frame)
         // });
         connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
-            console.log("#@@@@@@@emb CHANNEL_SELECT_TREE")
+            console.log("#@@@@@@@emb CHANNEL_SELECT_TREE", gr.rootNodes)
             const rootNode = gr.rootNodes[req.rootNodeId];
+            console.log("#@@@@@@@emb CHANNEL_SELECT_TREE>", rootNode)
             const nodeStructure = convertToNodeStructureInfo(rootNode);
             connection.post(CHANNEL_NOTIFY_TREE_STRUCTURE, nodeStructure);
         })
@@ -64,4 +63,10 @@ async function main() {
     })
 }
 
-main();
+
+const gr = (window as any).GrimoireJS as GrimoireInterface;
+console.log("init", gr.callInitializedAlready)
+gr(() => {
+    main(gr);
+});
+
