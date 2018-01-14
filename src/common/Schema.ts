@@ -85,7 +85,7 @@ export function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
 
 
 
-function convertToComponentInfo(component: Component): ComponentInfo {
+export function convertToComponentInfo(component: Component): ComponentInfo {
     return {
         nodeID: component.node.id,
         fqn: component.name.fqn,
@@ -98,7 +98,7 @@ function convertToComponentInfo(component: Component): ComponentInfo {
     }
 }
 
-function convertToAttributeInfo(attribute: Attribute): AttributeInfo {
+export function convertToAttributeInfo(attribute: Attribute): AttributeInfo {
     return {
         nodeID: attribute.component.node.id,
         componentID: attribute.component.id,

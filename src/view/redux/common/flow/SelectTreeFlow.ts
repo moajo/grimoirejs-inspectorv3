@@ -35,6 +35,7 @@ export function reducer(store: ICommonState, action: CommonAction) {
             store = {
                 ...store,
                 treeSelection: action.selection,
+                structure: action.structure
             };
             break;
     }

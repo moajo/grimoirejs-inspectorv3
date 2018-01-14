@@ -82,7 +82,6 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
                     }
                     const response = await postAndWaitReply(emb, CHANNEL_SELECT_NODE, a, CHANNEL_NOTIFY_TREE_STRUCTURE)
                     parent.post(CHANNEL_NOTIFY_TREE_STRUCTURE, response);
-
                 })
                 cn.open(CHANNEL_SELECT_TREE).flatMap(async treeSelection => {//rootのみ
                     const grExists = await this.connectToFrame(treeSelection.frameUUID);

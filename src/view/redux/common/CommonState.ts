@@ -1,6 +1,6 @@
 
 import { IConnection } from "../../../common/Connection";
-import { FrameStructure } from "../../../common/Schema";
+import { FrameStructure, NodeStructureInfo } from "../../../common/Schema";
 
 export interface TreeSelection {
     frameUUID: string;
@@ -31,6 +31,7 @@ export interface ICommonState {
     connection?: IConnection
     adjustScreenMode: AdjustScreenMode
     adjustScreenRegion: AdjustScreenRegion
+    structure?: NodeStructureInfo,
 }
 
 
