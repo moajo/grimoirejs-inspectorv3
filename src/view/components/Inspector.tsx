@@ -8,11 +8,22 @@ import styl from "./Inspector.styl";
 import cx from "classnames";
 import IconButton from './IconButton';
 
+interface SearchBoxProps {
+}
+
+const SearchBox: React.SFC<SearchBoxProps> = (props) => {
+    return (<div className={styl.searchBox}>
+        <p><i className="fas fa-search"></i></p>
+        <input type="text" />
+    </div>);
+};
+
 interface ToolBoxProps {
 }
 
 const ToolBox: React.SFC<ToolBoxProps> = (props) => {
     return (<div className={styl.toolboxContainer}>
+        <SearchBox />
     </div>);
 };
 

@@ -25,7 +25,7 @@ const IconButton: React.SFC<IconButtonProps> = (props) => {
         [styl.disabled]: props.enabled === false,
         [styl.enabled]: props.enabled || props.enabled === undefined
     })} style={{ gridArea: props.gridArea }} onClick={clicked}>
-        {props.icon}{props.label ? <p>{props.label}</p> : null}<p></p>
+        <p className={styl.iconContainer}>{props.icon}</p>{props.label ? <p>{props.label}</p> : null}<p></p>
     </div>);
 };
 

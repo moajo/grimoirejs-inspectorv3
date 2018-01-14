@@ -4,6 +4,9 @@
 
 .nodeName
     color $col("color","emp")
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
 
 .inspectorHeaderContainer
     text-align center
@@ -45,8 +48,24 @@
 
 .menu
     margin 0px
-
-.toolboxContainer
+.searchBox
     display grid
-    grid-template-columns 1fr 32px
-    grid-template-areas "SEARCHBOX ADD"
+    grid-template-columns auto 1fr
+    grid-template-areas "ICON INPUT"
+    margin 5px
+    > p
+        grid-area ICON
+        margin 0px 6px
+        padding 3px 0px
+        color $col()
+    > input 
+        grid-area INPUT
+        appearance none
+        border none
+        border-radius 0
+        height 100%
+        &:focus
+            border none 
+            border-radius 0
+            outline none
+
