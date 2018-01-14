@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { TreeSelection } from '../redux/common/CommonState';
 import styl from "./TreeSelector.styl";
-import { TreeInfo } from '../../common/Schema';
+import { TreeInfo, FrameStructure } from '../../common/Schema';
 import _ from "lodash";
 import cx from "classnames";
 import SelectionFilter from '../SelectionFilter';
 import { IState } from '../redux/State';
 import { connect, DispatchProp } from 'react-redux';
 import { switchTreeSelector } from '../redux/tree/selector/Selector';
-import { FrameStructure } from '../../common/Constants';
 import { window } from 'rxjs/operators/window';
 import { SelectTreeActionCreator } from '../redux/common/CommonActionCreator';
 
@@ -71,10 +70,10 @@ const FrameElement: React.SFC<FrameElementProps> = (props) => {
         <p className={styl.iconContainer}><i className="far fa-window-maximize"></i></p>
         <p className={styl.urlContainer}>{props.frame.url}</p>
         <div className={styl.canvasListContainer}>
-            {_.map(props.frame.trees, v => (<TreeElement key={v.rootNodeId} tree={v} frameUUID={props.frame.uuid} />))}
+            {_.map(props.frame.trees, v => (<TreeElement key={v.rootNodeId} tree={v} frameUUID={props.frame.UUID} />))}
         </div>
         <div className={styl.framesListContainer}>
-            {_.flatMap(_.filter(props.frame.children, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value.uuid} frame={value!} />))}
+            {_.flatMap(_.filter(props.frame.children, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value.UUID} frame={value!} />))}
         </div>
     </div>)
 };
@@ -83,7 +82,7 @@ const FrameElement: React.SFC<FrameElementProps> = (props) => {
 const TreeSelectorExpander: React.SFC<TreeSelectorProps> = (props) => {
     return (
         <div className={styl.expanderContainer}>
-            {_.flatMap(_.filter(props.frames, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value!.uuid} frame={value!} />))}
+            {_.flatMap(_.filter(props.frames, (v) => v && hasChildContext(v)), (value, key) => (<FrameElement key={value!.UUID} frame={value!} />))}
         </div>
     );
 };

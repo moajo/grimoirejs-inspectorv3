@@ -4,12 +4,13 @@ import CommonActionType from "../CommonActionType";
 import { MiddlewareAPI } from "redux";
 import { IState } from "../../State";
 import { Observable } from "rxjs/Observable";
-import { CHANNEL_PUT_FRAMES, FrameStructure } from "../../../../common/Constants";
+import { CHANNEL_PUT_FRAMES } from "../../../../common/Constants";
 import { PutFrameActionCreator, SelectTreeActionCreator } from "../CommonActionCreator";
 import { ICommonState } from "../CommonState";
 import { Dependency } from "../CommonDependency";
 import { TreeSelection } from "../CommonState"
 import _ from "lodash";
+import { FrameStructure } from "../../../../common/Schema";
 
 export function GetFramesEpic(
     actions: ActionsObservable<CommonAction>,
@@ -17,7 +18,7 @@ export function GetFramesEpic(
     dependency: Dependency,
 ): Observable<CommonAction> {
     const p = actions.ofType(CommonActionType.GET_FRAMES).first().flatMap(() => {
-        return dependency.connection!.open(CHANNEL_PUT_FRAMES).map(a => PutFrameActionCreator(a.uuid, a))
+        return dependency.connection!.open(CHANNEL_PUT_FRAMES).map(a => PutFrameActionCreator(a.UUID, a))
     });
     actions.ofType(CommonActionType.GET_FRAMES).subscribe(a => {
         console.log("@[flow] GET_FRAMES")

@@ -18,6 +18,8 @@ import {
     CHANNEL_NOTIFY_ROOT_NODES_RESPONSE,
     CHANNEL_NOTIFY_FRAME_CLOSE,
     CHANNEL_NOTIFY_ROOT_NODES,
+    CHANNEL_NOTIFY_TREE_STRUCTURE,
+    CHANNEL_SELECT_NODE,
 } from '../common/Constants';
 import { IGateway, WindowGateway } from '../common/Gateway';
 import { isNotNullOrUndefined, postAndWaitReply } from '../common/Util';
@@ -27,6 +29,7 @@ import { Subscriber } from 'rxjs/Subscriber';
 import { Observer } from 'rxjs/Observer';
 import { IConnection, redirect } from '../common/Connection';
 import { FrameStructure } from '../common/Schema';
+import { last } from 'rxjs/operator/last';
 
 declare function require(x: string): any;
 const uuid = require("uuid/v4");
@@ -37,7 +40,7 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
 
     // フレーム構造
     public frameStructureSubject = new BehaviorSubject<FrameStructure>({
-        uuid: this.UUID,
+        UUID: this.UUID,
         url: location.href,
         children: {},
         trees: {},
@@ -46,13 +49,11 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
     public parentConnectionSubject = new BehaviorSubject<undefined | IConnection>(undefined);
     public embConnectionSubject = new BehaviorSubject<IConnection | undefined>(undefined);
 
-    // 子フレームへのリダイレクトリクエスト
-    // public selectFrameRequestStream = new BehaviorSubject<string>(this.UUID);
-
     public embParentRedirection = new BehaviorSubject<ISubscription | undefined>(undefined);
     public childFrameConnections = {} as { [key: string]: IConnection };
 
-    // public bridgingCompleteSubject = new Subject<string>();
+    // embかiframeへのコネクション
+    public embProxiSubject = new BehaviorSubject<IConnection | undefined>(undefined);
 
     constructor(
         public tabId: number,
@@ -68,30 +69,40 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
 
         this.startFrameStructurePropagation();
 
-        (async ()=>{
+        (async () => {
             const init = (cn: IConnection) => {
+                cn.open(CHANNEL_SELECT_NODE).subscribe(async a=>{
+                    const emb = this.embProxiSubject.getValue();
+                    if (!emb) {
+                        return;
+                    }
+                    const parent = this.parentConnectionSubject.getValue();
+                    if (!parent) {
+                        return;
+                    }
+                    const response = await postAndWaitReply(emb, CHANNEL_SELECT_NODE, a, CHANNEL_NOTIFY_TREE_STRUCTURE)
+                    parent.post(CHANNEL_NOTIFY_TREE_STRUCTURE, response);
+
+                })
                 cn.open(CHANNEL_SELECT_TREE).flatMap(async treeSelection => {//rootのみ
                     const grExists = await this.connectToFrame(treeSelection.frameUUID);
                     return {
                         grExists,
                         treeSelection,
                     }
-                }).subscribe(a => {
-                    const emb = this.embConnectionSubject.getValue();
-                    if(!emb){
+                }).subscribe(async a => {
+                    const emb = this.embProxiSubject.getValue();
+                    if (!emb) {
                         return;
                     }
-                    emb.post(CHANNEL_SELECT_TREE,a.treeSelection)
-                    return;
-                    // const parentConnection = this.parentConnectionSubject.getValue();
-                    // if (!parentConnection) {
-                    //     return;
-                    // }
-                    // if (this.isIframe) {
-                    //     parentConnection.post(CHANNEL_CONNECT_TO_FRAME_RESPONSE, a);
-                    // }
-                })
-                // .subscribe(this.selectFrameRequestStream);
+                    const parent = this.parentConnectionSubject.getValue();
+                    if (!parent) {
+                        return;
+                    }
+                    const response = await postAndWaitReply(emb, CHANNEL_SELECT_TREE, a.treeSelection, CHANNEL_NOTIFY_TREE_STRUCTURE)
+                    parent.post(CHANNEL_NOTIFY_TREE_STRUCTURE, response);
+                });
+
                 cn.open(CHANNEL_CONNECT_TO_FRAME).flatMap(id => {//子のみ
                     return this.connectToFrame(id)
                 }).subscribe(a => {
@@ -104,7 +115,7 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
                     }
                 })
             }
-    
+
             if (this.isIframe) {
                 const gateway = new WindowGateway("iframe:cs", window.parent);
                 const parentConnection = (await gateway.connect(CONNECTION_CS_TO_IFRAME)).startWith(cn => {
@@ -117,11 +128,11 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
                     init(a);
                     return a;
                 });;
-    
+
                 await postAndWaitReply(parentConnection, CHANNEL_NOTIFY_TAB_ID, this.tabId, CHANNEL_CONNECTION_ESTABLISHED);
                 this.parentConnectionSubject.next(parentConnection);
             }
-        })();       
+        })();
     }
 
     // grの存在確認してコネクションを作ってembConnectionSubjectにいれる
@@ -152,12 +163,12 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
             cnp.startWith(cn => {
                 cn.open(CHANNEL_NOTIFY_FRAME_STRUCTURE).do(structure => {
                     // console.log(`@@@[cs:${currentFrameUUID.substring(0, 8)}${isIframe ? "(iframe)" : ""}] iframe str update`)
-                    this.childFrameConnections[structure.uuid] = cn;
+                    this.childFrameConnections[structure.UUID] = cn;
                 }).map(structure => {
                     const newValue = {
                         ...this.frameStructureSubject.getValue(),
                     }
-                    newValue.children[structure.uuid] = structure;
+                    newValue.children[structure.UUID] = structure;
                     return newValue;
                 }).subscribe(this.frameStructureSubject);
 
@@ -189,26 +200,23 @@ export class ContentScriptAgent<T extends IConnection, U extends IConnection>{
                 return false;
             } else {
                 console.log("# connectiong to frame>>> ok");
-                this.embParentRedirection.next(undefined);
+                this.embProxiSubject.next(embConnection);
+                // this.embParentRedirection.next(undefined);
                 return true;
             }
         } else {
             const connection = this.childFrameConnections[findFrame(this.frameStructureSubject.getValue(), frameUUID)];
             connection.post(CHANNEL_CONNECT_TO_FRAME, frameUUID);
             const grExists = await postAndWaitReply(connection, CHANNEL_CONNECT_TO_FRAME, frameUUID, CHANNEL_CONNECT_TO_FRAME_RESPONSE);
-            this.embParentRedirection.next(redirect(connection, parentConnection))
+            // this.embParentRedirection.next(redirect(connection, parentConnection))
+            this.embProxiSubject.next(connection);
             return grExists;
         }
     }
 
     subscribeEmbConnection() {
         this.embConnectionSubject
-        .do((a)=>{
-            console.log("@CS recieve tree info",a)
-        })
-
             .filter(isNotNullOrUndefined)
-
             .flatMap(cn =>
                 cn.open(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE)
             )
@@ -276,7 +284,7 @@ function findFrame(structure: FrameStructure, uuid: string) {
     throw new Error("frame not found")
 
     function containFrame(structure: FrameStructure, uuid: string) {
-        if (structure.uuid === uuid) {
+        if (structure.UUID === uuid) {
             return true;
         }
         for (const parentUUID in structure.children) {

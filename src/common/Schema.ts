@@ -10,12 +10,12 @@ export type MetaInfo = {
 };
 
 export type NodeSelector = {
-    frameID: string,
+    frameUUID: string,
     nodeID: string,
 };
 
 export type FrameStructure = {
-    uuid: string,
+    UUID: string,
     url: string,
     frameID?: string,
     frameClass?: string,
@@ -41,12 +41,6 @@ export interface NodeStructureInfo {
     uniqueId: string;
     fqn: string;
     children: NodeStructureInfo[];
-    components: ComponentInfo[];
-}
-
-export interface GomlNodeInfo { // ??? NodeStructureInfoとの違いは?
-    fqn: string;
-    uniqueId: string
     components: ComponentInfo[];
 }
 

@@ -1,5 +1,6 @@
-import { FrameStructure } from "../../../common/Constants";
+
 import { IConnection } from "../../../common/Connection";
+import { FrameStructure } from "../../../common/Schema";
 
 export interface TreeSelection {
     frameUUID: string;

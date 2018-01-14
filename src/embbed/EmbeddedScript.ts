@@ -3,7 +3,7 @@ import Component from 'grimoirejs/ref/Core/Component';
 import { EVENT_TREE_DID_ADDED } from 'grimoirejs/ref/Core/Constants';
 import GomlNode from 'grimoirejs/ref/Core/GomlNode';
 import { GrimoireInterface } from 'grimoirejs/ref/Tool/Types';
-import { AttributeInfo, ComponentInfo, GomlNodeInfo, NodeStructureInfo } from '../common/Schema';
+import { AttributeInfo, ComponentInfo, NodeStructureInfo } from '../common/Schema';
 import { IConnection } from '../common/Connection';
 
 export function notifyRootNodes(connection: IConnection, gr: GrimoireInterface) {
@@ -23,11 +23,12 @@ function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
     };
 }
 
-function convertToNodeInfo(node: GomlNode): GomlNodeInfo {
+function convertToNodeInfo(node: GomlNode): NodeStructureInfo {
     return {
         fqn: node.name.fqn,
         uniqueId: node.id,
-        components: node.getComponents<Component>().map(convertToComponentInfo)
+        components: node.getComponents<Component>().map(convertToComponentInfo),
+        children: node.children.map(convertToNodeInfo),
     };
 }
 function convertToComponentInfo(component: Component): ComponentInfo {
