@@ -1,0 +1,22 @@
+@import "../common-style/index.styl"
+.searchBox
+    display grid
+    grid-template-columns auto 1fr
+    grid-template-areas "ICON INPUT"
+    margin 5px
+    > p
+        grid-area ICON
+        margin 0px 6px
+        padding 3px 0px
+        color $col()
+    > input 
+        grid-area INPUT
+        appearance none
+        border none
+        border-radius 0
+        height 100%
+        font-size 18px
+        &:focus
+            border none 
+            border-radius 0
+            outline none

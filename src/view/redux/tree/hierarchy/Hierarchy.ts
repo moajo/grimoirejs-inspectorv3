@@ -16,6 +16,13 @@ export const reducer = (state: ITreeState = DefaultTreeState, action: TreeStateA
                     }
                 }
             };
+            break;
+        case TreeStateActionType.CHANGE_NODE_FILTER_QUERY:
+            state = {
+                ...state,
+                filterQuery: action.query
+            }
+            break;
     }
     return state;
 }

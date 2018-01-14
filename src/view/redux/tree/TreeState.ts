@@ -9,6 +9,7 @@ export interface IHierarchyState {
 export interface ITreeState {
     treeSelector: ITreeSelectorState;
     hierarchy: IHierarchyState;
+    filterQuery: string;
 }
 
 export const DefaultTreeState: ITreeState = {
@@ -17,5 +18,6 @@ export const DefaultTreeState: ITreeState = {
     },
     hierarchy: {
         isOpen: {}
-    }
+    },
+    filterQuery: ""
 };

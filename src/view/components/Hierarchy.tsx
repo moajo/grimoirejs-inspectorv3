@@ -6,10 +6,11 @@ import { connect, DispatchProp } from 'react-redux';
 import { NodeStructureInfo } from '../../common/Schema';
 import NameConverter from '../NameConverter';
 import { IState } from '../redux/State';
-import { changeNodeExpandState } from '../redux/tree/TreeStateActionCreator';
+import { changeNodeExpandState, changeNodeFilterQuery } from '../redux/tree/TreeStateActionCreator';
 import { ContextNotFound } from './ContextNotFound';
 import styl from './Hierarchy.styl';
 import { NodeSelection } from '../redux/common/CommonState';
+import Serachbox from './Serachbox';
 
 
 interface TreeElementLabelProps extends DispatchProp<TreeElementLabelProps> {
@@ -70,6 +71,7 @@ const TreeElement = connect((state: IState, ownProps: any) => {
 interface HierarchyProps extends DispatchProp<HierarchyProps> {
     rootNode?: NodeStructureInfo;
     nodeSelection: NodeSelection;
+    query: string;
 }
 
 const Hierarchy: React.SFC<HierarchyProps> = (props) => {
@@ -78,11 +80,14 @@ const Hierarchy: React.SFC<HierarchyProps> = (props) => {
     }
     return (
         <div className={styl.hierarchyContainer}>
-            <TreeElement node={props.rootNode} layer={0} nodeSelection={props.nodeSelection} />
+            <Serachbox value={props.query} onInput={v => props.dispatch!(changeNodeFilterQuery(v))} />
+            <div className={styl.hierarchyElementContainer}>
+                <TreeElement node={props.rootNode} layer={0} nodeSelection={props.nodeSelection} />
+            </div>
         </div>);
 };
 
-export default connect((store: IState): HierarchyProps => ({
+export default connect((state: IState): HierarchyProps => ({
     rootNode: {
         fqn: "fundamental.goml",
         uniqueId: "abc",
@@ -122,5 +127,6 @@ export default connect((store: IState): HierarchyProps => ({
             rootNodeId: ""
         },
         nodeId: "ijk"
-    }
+    },
+    query: state.tree.filterQuery
 }))(Hierarchy);

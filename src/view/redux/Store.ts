@@ -12,8 +12,9 @@ import * as TreeSelector from "./tree/selector/Selector";
 import { reduce } from "rxjs/operators/reduce";
 import { Dependency } from "./common/CommonDependency";
 import * as Hierarchy from "./tree/hierarchy/Hierarchy";
+import * as InspectorSection from "./inspector/inspector/InspectorSection";
 
-const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow, TreeSelector, Hierarchy, AdjustScreenFlow];
+const sections: IReduxSection[] = [MainFlow, ConnectFlow, GetFramesFlow, SelectTreeFlow, TreeSelector, Hierarchy, AdjustScreenFlow, InspectorSection];
 
 function getStoreFromReduxSections(sections: IReduxSection[]): Store<IReduxSection> {
     const sectionArray: { [key: string]: Reducer<IState>[] } = {};

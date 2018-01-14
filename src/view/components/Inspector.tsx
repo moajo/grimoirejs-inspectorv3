@@ -7,25 +7,23 @@ import { IState } from '../redux/State';
 import styl from "./Inspector.styl";
 import cx from "classnames";
 import IconButton from './IconButton';
+import SearchBox from "./Serachbox";
+import { changeAttributeFilterQuery } from '../redux/inspector/InspectorActionCreator';
 
-interface SearchBoxProps {
+
+interface ToolBoxProps extends DispatchProp<ToolBoxProps> {
+    query: string;
 }
 
-const SearchBox: React.SFC<SearchBoxProps> = (props) => {
-    return (<div className={styl.searchBox}>
-        <p><i className="fas fa-search"></i></p>
-        <input type="text" />
-    </div>);
-};
-
-interface ToolBoxProps {
-}
-
-const ToolBox: React.SFC<ToolBoxProps> = (props) => {
+const ToolBoxOriginal: React.SFC<ToolBoxProps> = (props) => {
     return (<div className={styl.toolboxContainer}>
-        <SearchBox />
+        <SearchBox value={props.query} onInput={(v) => props.dispatch!(changeAttributeFilterQuery(v))} />
     </div>);
 };
+
+const ToolBox = connect((state: IState) => ({
+    query: state.inspector.attributeQuery
+}))(ToolBoxOriginal);
 
 interface ComponentElementProps {
     component: ComponentInfo;
@@ -62,7 +60,7 @@ const Inspector: React.SFC<InspectorProps> = (props) => {
         <InspectorHeader node={props.node} />
         <ControlHeader header="Components" />
         <ToolBox />
-        {props.node.components.map(c => (<ComponentElement component={c} />))}
+        {props.node.components.map(c => (<ComponentElement key={c.uniqueId} component={c} />))}
         <IconButton label="Add component" icon={<i className="fas fa-puzzle-piece"></i>} />
     </div>);
 };

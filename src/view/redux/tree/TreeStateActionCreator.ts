@@ -7,3 +7,10 @@ export function changeNodeExpandState(nodeId: string, isOpen: boolean) {
         nodeId
     };
 }
+
+export function changeNodeFilterQuery(query: string) {
+    return {
+        type: TreeStateActionType.CHANGE_NODE_FILTER_QUERY,
+        query
+    }
+}
