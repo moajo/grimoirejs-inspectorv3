@@ -11,7 +11,7 @@ export default class SelectionFilter {
         if (!state.common.treeSelection) {
             return undefined;
         } else {
-            return state.common.frames[state.common.treeSelection.frameUUID];
+            return SelectionFilter._getCurrentFrame(state.common.frames, state.common.treeSelection.frameUUID);
         }
     }
 
@@ -39,5 +39,19 @@ export default class SelectionFilter {
             return undefined;
         }
         // TODO:
+    }
+
+    private static _getCurrentFrame(frames: { [key: string]: FrameStructure | undefined }, frameId: string): FrameStructure | undefined {
+        if (frames[frameId]) {
+            return frames[frameId];
+        } else {
+            for (let key in frames) {
+                const frame = frames[key];
+                const frameDecendents = SelectionFilter._getCurrentFrame(frame!.children, frameId);
+                if (frameDecendents) {
+                    return frameDecendents;
+                }
+            }
+        }
     }
 }

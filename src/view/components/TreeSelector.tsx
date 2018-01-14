@@ -99,7 +99,7 @@ const IndicatorLabel: React.SFC<IndicatorLabelProps> = (props) => {
                 <i className="fas fa-eye"></i>
             </p>
             <p className={styl.indicatorLabelLabelContainer}>
-                {idClass ? (<IdClassLabel id={idClass.scriptTagId} classNames={idClass.scriptTagClass} idClass={styl.idLabel} classNameClass={styl.classLabel} />) : null}
+                {idClass ? (<IdClassLabel id={idClass.scriptTagId} classNames={idClass.scriptTagClass} idClass={styl.idLabel} classNameClass={styl.classLabel} emptyLabel={`No NAME(${props.selectedTree.rootNodeId})`} />) : null}
             </p>
         </div>);
 }

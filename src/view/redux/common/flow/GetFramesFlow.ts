@@ -32,7 +32,7 @@ export function PutFrameEpic(
     store: MiddlewareAPI<IState>,
     dependency: Dependency,
 ): Observable<CommonAction> {
-    return actions.ofType(CommonActionType.PUT_FRAME).filter((a) => !store.getState().common.treeSelection && !!(a as PutFrameAction).frameInfo && !!_.pick((a as PutFrameAction).frameInfo!.trees)).map((a) => {
+    return actions.ofType(CommonActionType.PUT_FRAME).filter((a) => !store.getState().common.treeSelection && !!(a as PutFrameAction).frameInfo && _.size((a as PutFrameAction).frameInfo!.trees) > 0).map((a) => {
         const put: PutFrameAction = a as PutFrameAction;
         return SelectTreeActionCreator({
             frameUUID: put.frameId,
