@@ -45,6 +45,7 @@ export interface NodeStructureInfo {
 }
 
 export interface ComponentInfo {
+    nodeID: string,
     uniqueId: string,
     fqn: string,
     enabled: boolean;
@@ -52,6 +53,8 @@ export interface ComponentInfo {
 }
 
 export interface AttributeInfo {
+    nodeID: string,
+    componentID: string,
     fqn: string,
     converterFQN: string,
     obtainedValue: any,
@@ -78,29 +81,32 @@ export function convertToNodeStructureInfo(node: GomlNode): NodeStructureInfo {
         children: node.children.map(convertToNodeStructureInfo),
         components: node.getComponents<Component>().map(convertToComponentInfo),
     }
-
 }
+
+
 
 export function convertToComponentInfo(component: Component): ComponentInfo {
     return {
-        uniqueId: component.id,
+        nodeID: component.node.id,
         fqn: component.name.fqn,
+        uniqueId: component.id,
         enabled: component.enabled,
-        attributes: component.attributes.toArray().reduce((obj, attr) => {
-            obj[attr.name.fqn] = convertToAttributeInfo(attr);
+        attributes: component.attributes.toArray().reduce((obj, attribute) => {
+            obj[attribute.name.fqn] = convertToAttributeInfo(attribute);
             return obj;
-        }, {} as { [attributeFQN: string]: AttributeInfo }),
+        }, {} as { [attributeFQN: string]: AttributeInfo })
     }
 }
 
-
 export function convertToAttributeInfo(attribute: Attribute): AttributeInfo {
     return {
+        nodeID: attribute.component.node.id,
+        componentID: attribute.component.id,
         fqn: attribute.name.fqn,
-        converterFQN: "notimplement!" as any,
-        obtainedValue: "notimplement!" as any,
-        defaultValue: "notimplement!" as any,
-        errorText: "notimplement!" as any,
-        isLazy: "notimplement!" as any,
+        converterFQN: "not implement yet",// TODO
+        obtainedValue: "not implement",
+        defaultValue: "not implement yet",
+        errorText: "not implement",
+        isLazy: false,
     }
 }

@@ -8,12 +8,30 @@ import {
     CHANNEL_SELECT_NODE,
     CHANNEL_SELECT_TREE,
     CONNECTION_CS_TO_EMB,
+    CHANNEL_NOTIFY_ATTRIBUTE_CHANGE,
 } from '../common/Constants';
 import { WindowGateway } from '../common/Gateway';
-import { convertToNodeStructureInfo, convertToScriptTagInfo, FrameStructure } from '../common/Schema';
+import { convertToNodeStructureInfo, convertToScriptTagInfo, FrameStructure, convertToAttributeInfo } from '../common/Schema';
+import Component from 'grimoirejs/ref/Core/Component';
+import Attribute from 'grimoirejs/ref/Core/Attribute';
+import GomlNode from 'grimoirejs/ref/Core/GomlNode';
+import { isNotNullOrUndefined } from '../common/Util';
 
 async function main(gr: GrimoireInterface) {
     const treesSubject = new BehaviorSubject<FrameStructure["trees"]>({});
+
+    const attributeWatchSubject = new BehaviorSubject<{
+        node: GomlNode,
+        watcher: (newValue: any, oldValue: any, attr: Attribute) => void
+    } | undefined>(undefined);
+
+    attributeWatchSubject.bufferCount(2).map(it => it[0]).filter(isNotNullOrUndefined).subscribe(old => {
+        old.node.getComponents<Component>().forEach(c => {
+            c.attributes.toArray().forEach(a => {
+                a.unwatch(old.watcher);
+            });
+        });
+    });
 
     const trees = {} as FrameStructure["trees"];
     for (const key in gr.rootNodes) {
@@ -38,6 +56,7 @@ async function main(gr: GrimoireInterface) {
         connection.open(CHANNEL_NOTIFY_ROOT_NODES)
             .map(() => treesSubject.getValue())
             .subscribe(connection.open(CHANNEL_NOTIFY_ROOT_NODES_RESPONSE));
+
         connection.open(CHANNEL_SELECT_TREE).subscribe(req => {
             const rootNode = gr.rootNodes[req.rootNodeId];
             const nodeStructure = convertToNodeStructureInfo(rootNode);
@@ -45,7 +64,23 @@ async function main(gr: GrimoireInterface) {
         })
 
         connection.open(CHANNEL_SELECT_NODE).subscribe(nodeSelector => {
-            nodeSelector.frameUUID
+            console.log(nodeSelector)
+            const node = gr.nodeDictionary[nodeSelector.nodeID]
+            if (!node) {
+                throw new Error(`node not found. id: ${nodeSelector.nodeID}`);
+            }
+            const watcher = (newValue: any, oldValue: any, attr: Attribute) => {
+                connection.post(CHANNEL_NOTIFY_ATTRIBUTE_CHANGE, convertToAttributeInfo(attr))
+            }
+            node.getComponents<Component>().forEach(c => {
+                c.attributes.toArray().forEach(a => {
+                    a.watch(watcher);
+                })
+            })
+            attributeWatchSubject.next({
+                node,
+                watcher
+            });
         });
         return connection;
     });
